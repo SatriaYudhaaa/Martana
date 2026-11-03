@@ -56,12 +56,6 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#booking">
-                            Jadwal
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
                         <a class="nav-link" href="#fasilitas">
                             Fasilitas
                         </a>
