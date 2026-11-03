@@ -217,6 +217,7 @@
                         'image' => 'images/lapangan-prime.jpg',
                         'tag' => 'PREMIUM',
                         'number' => '01',
+                        'route' => 'fields.prime',
                     ],
                     [
                         'name' => 'MARTANA ARENA',
@@ -225,6 +226,7 @@
                         'image' => 'images/lapangan-arena.jpg',
                         'tag' => 'BEST VALUE',
                         'number' => '02',
+                        'route' => 'fields.arena',
                     ],
                 ];
             @endphp
@@ -277,8 +279,8 @@
                                         <span class="price-unit">/ jam</span>
                                     </div>
 
-                                    <a href="#booking" class="field-detail-link">
-                                        Booking
+                                    <a href="{{ route($field['route']) }}" class="field-detail-link">
+                                        Lihat Detail
                                         <span aria-hidden="true">→</span>
                                     </a>
                                 </div>

@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class FieldController extends Controller
 {
-    //
+    public function prime()
+    {
+        return view('fields.prime');
+    }
+
+    public function arena()
+    {
+        return view('fields.arena');
+    }
 }
