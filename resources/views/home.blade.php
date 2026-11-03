@@ -17,9 +17,11 @@
 
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <!-- Navbar MARTANA -->
+    <nav class="navbar navbar-expand-lg sticky-top martana-navbar">
         <div class="container">
+
+            <!-- Logo dan Brand -->
             <a href="{{ route('home') }}" class="brand">
                 <img
                     src="{{ asset('images/martana-logo.png') }}"
@@ -29,6 +31,7 @@
                 <span>MARTANA</span>
             </a>
 
+            <!-- Tombol Hamburger -->
             <button
                 class="navbar-toggler"
                 type="button"
@@ -41,8 +44,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <!-- Menu Navigasi -->
             <div class="collapse navbar-collapse" id="navbarMenu">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ route('home') }}">
                             Beranda
@@ -52,6 +57,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#lapangan">
                             Lapangan
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#booking">
+                            Jadwal
                         </a>
                     </li>
 
@@ -67,11 +78,21 @@
                         </a>
                     </li>
 
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-martana px-4" href="#booking">
-                            Booking Sekarang
+                    <!-- Pemisah sebelum Login -->
+                    <li class="nav-item navbar-auth-divider">
+                        <span></span>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link navbar-login-link">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-martana navbar-booking-btn">
+                            Register
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>

@@ -1197,3 +1197,224 @@ a {
         font-size: 2rem;
     }
 }
+
+/* =========================
+   NAVBAR MARTANA - MODERN
+========================= */
+
+.martana-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    padding: 12px 0;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid rgba(4, 120, 87, 0.10);
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.martana-navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.martana-navbar .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--emerald-dark) !important;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.martana-navbar .brand-logo {
+    width: 44px !important;
+    height: 44px !important;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+
+.martana-navbar .brand:hover .brand-logo {
+    transform: rotate(-5deg) scale(1.06);
+}
+
+/* Link navigasi */
+.martana-navbar .navbar-nav {
+    align-items: center;
+}
+
+.martana-navbar .nav-link {
+    position: relative;
+    padding: 10px 14px !important;
+    color: #334155;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.martana-navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--emerald);
+    border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.2s ease;
+}
+
+.martana-navbar .nav-link:hover,
+.martana-navbar .nav-link.active {
+    color: var(--emerald);
+}
+
+.martana-navbar .nav-link:hover::after,
+.martana-navbar .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* CTA Booking */
+.martana-navbar .navbar-booking-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border: 1px solid var(--emerald);
+    border-radius: 10px;
+    background: var(--emerald);
+    color: #ffffff;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 5px 12px rgba(4, 120, 87, 0.16);
+    transition: all 0.2s ease;
+}
+
+.martana-navbar .navbar-booking-btn:hover {
+    background: var(--emerald-dark);
+    border-color: var(--emerald-dark);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(4, 120, 87, 0.22);
+}
+
+/* Hamburger */
+.martana-navbar .navbar-toggler {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.martana-navbar .navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.15);
+}
+
+.martana-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(6,78,59,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .martana-navbar .navbar-toggler {
+        display: none;
+    }
+
+    .martana-navbar .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto;
+    }
+}
+
+/* Mobile dan tablet */
+@media (max-width: 991.98px) {
+    .martana-navbar .navbar-collapse {
+        flex-basis: 100%;
+        padding-top: 14px;
+    }
+
+    .martana-navbar .navbar-nav {
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .martana-navbar .nav-link {
+        padding: 10px 12px !important;
+        border-radius: 8px;
+    }
+
+    .martana-navbar .nav-link:hover {
+        background: var(--emerald-soft);
+    }
+
+    .martana-navbar .nav-link::after {
+        display: none;
+    }
+
+    .martana-navbar .navbar-booking-btn {
+        display: flex;
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .martana-navbar {
+        padding: 8px 0;
+    }
+
+    .martana-navbar .brand {
+        font-size: 1.15rem;
+    }
+
+    .martana-navbar .brand-logo {
+        width: 38px !important;
+        height: 38px !important;
+    }
+}
+
+/* Pemisah menu navigasi dan autentikasi */
+.navbar-auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 0 8px;
+}
+
+.navbar-auth-divider span {
+    display: block;
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+}
+
+/* Login */
+.navbar .navbar-login-link {
+    padding: 10px 14px;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.navbar .navbar-login-link:hover {
+    color: var(--emerald);
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+    .navbar-auth-divider {
+        margin: 8px 0;
+    }
+    .navbar-auth-divider span {
+        display: block;
+        width: 2px;
+        height: 34px;
+        background: #94a3b8;
+        border-radius: 999px;
+    }
+}
