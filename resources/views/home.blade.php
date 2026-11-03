@@ -135,10 +135,10 @@
                     </p>
 
                     <div class="hero-actions">
-                        <a href="#booking" class="btn btn-martana">
-                            Cari Jadwal
-                            <span aria-hidden="true">→</span>
-                        </a>
+                    <a href="{{ route('booking.index') }}" class="btn btn-martana">
+                        Cari Jadwal
+                        <span aria-hidden="true">→</span>
+                    </a>
 
                         <a href="#lapangan" class="btn btn-hero-outline">
                             Lihat Lapangan
@@ -279,8 +279,10 @@
                                         <span class="price-unit">/ jam</span>
                                     </div>
 
-                                    <a href="{{ route($field['route']) }}" class="field-detail-link">
-                                        Lihat Detail
+                                    <a href="{{ route('booking.index', [
+                                        'field' => $field['route'] === 'fields.prime' ? 'prime' : 'arena'
+                                    ]) }}" class="field-detail-link">
+                                        Booking
                                         <span aria-hidden="true">→</span>
                                     </a>
                                 </div>

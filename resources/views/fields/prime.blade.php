@@ -169,8 +169,8 @@
                         <div class="text-secondary">5 lawan 5</div>
                     </div>
 
-                    <a href="{{ url('/#booking') }}" class="booking-btn">
-                        Lihat Pilihan Booking →
+                    <a href="{{ route('booking.index') }}" class="booking-btn">
+                        Booking MARTANA PRIME →
                     </a>
                 </div>
             </div>
