@@ -74,14 +74,22 @@ a {
 }
 
 .brand {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    color: var(--emerald-dark) !important;
-    font-size: 1.25rem;
-    font-weight: 800;
-    text-decoration: none !important;
-    white-space: nowrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 26px;
+    color: var(--green);
+    font-size: 27px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.brand img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .brand-logo {
@@ -195,6 +203,241 @@ a {
         display: flex;
         width: 100%;
         margin-top: 8px;
+    }
+}
+
+/* ===== DAFTAR LAPANGAN MARTANA ===== */
+
+.field-section {
+    padding: 90px 0;
+    background: #f5f8f7;
+}
+
+.field-section .section-heading {
+    margin-bottom: 38px;
+}
+
+.field-section .section-eyebrow {
+    color: #07845e;
+    letter-spacing: 2px;
+    font-size: 13px;
+}
+
+.field-section .section-title {
+    color: #142b25;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.field-section .section-description {
+    max-width: 620px;
+    color: #687a75;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.field-card {
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e2ebe7;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(20, 60, 45, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.field-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 36px rgba(20, 60, 45, 0.13);
+}
+
+.field-card-image {
+    position: relative;
+    height: 270px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #185d49, #459d7d);
+}
+
+.field-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.field-card:hover .field-photo {
+    transform: scale(1.06);
+}
+
+.field-card-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.05) 20%,
+        rgba(0, 0, 0, 0.65) 100%
+    );
+    pointer-events: none;
+}
+
+.field-number,
+.field-tag,
+.field-image-caption {
+    position: absolute;
+    z-index: 1;
+}
+
+.field-number {
+    top: 18px;
+    left: 18px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.field-tag {
+    top: 16px;
+    right: 16px;
+    padding: 7px 12px;
+    border-radius: 30px;
+    background: #d7f9e8;
+    color: #08734f;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.field-image-caption {
+    right: 22px;
+    bottom: 20px;
+    left: 22px;
+    color: #fff;
+}
+
+.field-image-caption span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 0.85;
+}
+
+.field-image-caption h3 {
+    margin: 5px 0 0;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.field-card-body {
+    padding: 24px;
+}
+
+.field-location {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    color: #61746d;
+    font-size: 14px;
+}
+
+.field-info-icon {
+    color: #07845e;
+    font-size: 18px;
+}
+
+.field-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    color: #5e7069;
+    font-size: 13px;
+}
+
+.rating-stars {
+    color: #f5a623;
+    letter-spacing: 1px;
+}
+
+.rating-separator {
+    color: #a4b1ac;
+}
+
+.field-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid #edf1ef;
+}
+
+.field-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.price-label {
+    width: 100%;
+    color: #84928c;
+    font-size: 12px;
+}
+
+.field-price strong {
+    color: #087c58;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.price-unit {
+    color: #75847e;
+    font-size: 13px;
+}
+
+.field-detail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 17px;
+    border-radius: 10px;
+    background: #087c58;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.field-detail-link:hover {
+    background: #056344;
+    color: #fff;
+}
+
+@media (max-width: 576px) {
+    .field-section {
+        padding: 60px 0;
+    }
+
+    .field-card-image {
+        height: 220px;
+    }
+
+    .field-card-body {
+        padding: 20px;
+    }
+
+    .field-price strong {
+        font-size: 19px;
+    }
+
+    .field-detail-link {
+        padding: 10px 13px;
     }
 }
 

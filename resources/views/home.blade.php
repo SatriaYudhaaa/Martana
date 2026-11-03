@@ -61,12 +61,6 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#booking">
-                            Jadwal
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
                         <a class="nav-link" href="#fasilitas">
                             Fasilitas
                         </a>
@@ -78,20 +72,39 @@
                         </a>
                     </li>
 
-                    <!-- Pemisah sebelum Login -->
+                    <!-- Menu Akun -->
                     <li class="nav-item navbar-auth-divider">
                         <span></span>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="#" class="nav-link navbar-login-link">Login</a>
-                    </li>
+                    @if (Auth::check())
+                        <li class="nav-item">
+                            <span class="nav-link navbar-login-link">
+                                {{ Auth::user()->name }}
+                            </span>
+                        </li>
 
-                    <li class="nav-item">
-                        <a href="#" class="btn btn-martana navbar-booking-btn">
-                            Register
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-martana navbar-booking-btn">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="nav-link navbar-login-link">
+                                Login
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('register') }}" class="btn btn-martana navbar-booking-btn">
+                                Register
+                            </a>
+                        </li>
+                    @endif
 
                 </ul>
             </div>
@@ -182,7 +195,7 @@
 
             <div class="section-heading">
                 <p class="section-eyebrow text-uppercase fw-bold mb-2">
-                    Pilih Lapangan
+                    PILIH LAPANGAN
                 </p>
 
                 <h2 class="section-title">
@@ -190,8 +203,8 @@
                 </h2>
 
                 <p class="section-description">
-                    Fasilitas nyaman, kualitas lapangan terjaga,
-                    dan pengalaman bermain terbaik.
+                    Lapangan berkualitas untuk pertandingan yang lebih seru.
+                    Pilih lapangan favoritmu dan booking dengan mudah.
                 </p>
             </div>
 
@@ -201,48 +214,72 @@
                         'name' => 'MARTANA PRIME',
                         'description' => 'Lapangan indoor • Vinyl',
                         'price' => '150.000',
+                        'image' => 'images/lapangan-prime.jpg',
+                        'tag' => 'PREMIUM',
+                        'number' => '01',
                     ],
                     [
                         'name' => 'MARTANA ARENA',
                         'description' => 'Lapangan indoor • Sintetis',
                         'price' => '150.000',
+                        'image' => 'images/lapangan-arena.jpg',
+                        'tag' => 'BEST VALUE',
+                        'number' => '02',
                     ],
                 ];
             @endphp
 
             <div class="row g-4">
-                @foreach ($fields as $index => $field)
-                    <div class="col-md-6 col-lg-4">
+                @foreach ($fields as $field)
+                    <div class="col-md-6 col-lg-5">
                         <article class="field-card">
 
                             <div class="field-card-image">
+                                <img
+                                    src="{{ asset($field['image']) }}"
+                                    alt="{{ $field['name'] }}"
+                                    class="field-photo"
+                                >
+
                                 <span class="field-number">
-                                    {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                                    {{ $field['number'] }}
                                 </span>
+
+                                <span class="field-tag">
+                                    {{ $field['tag'] }}
+                                </span>
+
+                                <div class="field-image-caption">
+                                    <span>INDOOR FUTSAL</span>
+                                    <h3>{{ $field['name'] }}</h3>
+                                </div>
                             </div>
 
-                            <div class="card-body">
-                                <h3 class="field-name">
-                                    {{ $field['name'] }}
-                                </h3>
+                            <div class="field-card-body">
+                                <div class="field-card-info">
+                                    <p class="field-location">
+                                        <span class="field-info-icon">▦</span>
+                                        {{ $field['description'] }}
+                                    </p>
 
-                                <p class="field-location">
-                                    {{ $field['description'] }}
-                                </p>
-
-                                <p class="field-rating">
-                                    ★★★★★
-                                    <span>4.9 · 5v5</span>
-                                </p>
+                                    <p class="field-rating">
+                                        <span class="rating-stars">★★★★★</span>
+                                        <span>4.9</span>
+                                        <span class="rating-separator">•</span>
+                                        <span>5v5</span>
+                                    </p>
+                                </div>
 
                                 <div class="field-card-bottom">
-                                    <span class="price">
-                                        Rp{{ $field['price'] }}
-                                        <small>/ jam</small>
-                                    </span>
+                                    <div class="field-price">
+                                        <span class="price-label">Mulai dari</span>
+                                        <strong>Rp{{ $field['price'] }}</strong>
+                                        <span class="price-unit">/ jam</span>
+                                    </div>
 
                                     <a href="#booking" class="field-detail-link">
-                                        Lihat detail
+                                        Booking
+                                        <span aria-hidden="true">→</span>
                                     </a>
                                 </div>
                             </div>
@@ -251,9 +288,9 @@
                     </div>
                 @endforeach
             </div>
+
         </div>
     </section>
-
 
     <!-- Fasilitas MARTANA -->
     <section class="about-section" id="fasilitas">
@@ -406,5 +443,19 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: @json(session('success')),
+            confirmButtonText: 'Oke',
+            confirmButtonColor: '#087f5b'
+        });
+    @endif
+</script>
 </body>
 </html>
