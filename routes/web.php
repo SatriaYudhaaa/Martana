@@ -7,6 +7,9 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\BookingController;
 use App\Models\Court;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\OwnerReportController;
+use App\Http\Controllers\OwnerGuardController;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])
@@ -57,3 +60,42 @@ Route::get('/payment/{id}', [PaymentController::class, 'show'])
 
 Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirm'])
     ->name('payment.confirm');
+
+Route::middleware('auth')->prefix('owner')->name('owner.')->group(function () {
+    Route::get('/dashboard', [OwnerController::class, 'dashboard'])
+        ->name('dashboard');
+});
+
+Route::middleware('auth')->prefix('owner')->name('owner.')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [OwnerController::class, 'dashboard'])
+        ->name('dashboard');
+
+    // Laporan
+    Route::get('/laporan/pendapatan', [OwnerReportController::class, 'revenue'])
+        ->name('reports.revenue');
+
+    Route::get('/laporan/booking', [OwnerReportController::class, 'bookings'])
+        ->name('reports.bookings');
+
+    // Kelola Lapangan
+    Route::get('/kelola/lapangan', [OwnerController::class, 'courts'])
+        ->name('courts.index');
+
+    Route::get('/kelola/penjaga', [OwnerGuardController::class, 'index'])
+    ->name('guards.index');
+
+Route::post('/kelola/penjaga', [OwnerGuardController::class, 'store'])
+    ->name('guards.store');
+
+Route::put('/kelola/penjaga/{id}', [OwnerGuardController::class, 'update'])
+    ->name('guards.update');
+
+Route::delete('/kelola/penjaga/{id}', [OwnerGuardController::class, 'destroy'])
+    ->name('guards.destroy');
+
+    // Pengaturan
+    Route::get('/pengaturan', [OwnerController::class, 'settings'])
+        ->name('settings');
+});
