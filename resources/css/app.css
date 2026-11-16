@@ -1661,3 +1661,177 @@ a {
         border-radius: 999px;
     }
 }
+
+/* =========================================
+   MARTANA BOOKING — selaras dengan homepage
+========================================= */
+
+:root {
+    --booking-green: #047857;
+    --booking-green-dark: #064e3b;
+    --booking-green-bright: #10b981;
+    --booking-mint: #a7f3d0;
+    --booking-bg: #f5f8fa;
+}
+
+/* Latar dan tipografi */
+body {
+    background: var(--booking-bg);
+    color: #142b25;
+}
+
+/* Hero booking */
+.booking-hero,
+.booking-header,
+.booking-page-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 64px 0 58px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 85% 15%,
+            rgba(167, 243, 208, .18), transparent 30%),
+        linear-gradient(120deg,
+            var(--booking-green-dark), var(--booking-green));
+    border-radius: 0 0 20px 20px;
+}
+
+.booking-hero h1,
+.booking-header h1,
+.booking-page-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+}
+
+.booking-hero p,
+.booking-header p,
+.booking-page-hero p {
+    color: #ecfdf5;
+}
+
+/* Kontainer booking */
+.booking-container,
+.booking-content,
+.booking-page {
+    width: min(1100px, calc(100% - 32px));
+    margin-inline: auto;
+}
+
+/* Tanggal booking */
+.booking-date,
+.date-selector,
+.booking-date-wrapper {
+    border: 1px solid #e2ebe7;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, .04);
+}
+
+/* Kartu lapangan dan ringkasan */
+.booking-card,
+.field-booking-card,
+.booking-summary,
+.summary-card {
+    overflow: hidden;
+    border: 1px solid #e2ebe7;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(20, 60, 45, .06);
+}
+
+/* Area foto / placeholder lapangan */
+.booking-card-image,
+.field-booking-image,
+.booking-field-image {
+    background:
+        linear-gradient(135deg, #dff4ec, #c9eadf);
+    color: var(--booking-green);
+}
+
+/* Heading dan harga */
+.booking-card h2,
+.booking-card h3,
+.field-booking-card h2,
+.field-booking-card h3 {
+    color: #142b25;
+    font-weight: 800;
+}
+
+.booking-card .price,
+.field-booking-card .price,
+.booking-price {
+    color: var(--booking-green);
+    font-weight: 900;
+}
+
+/* Slot waktu */
+.time-slot,
+.booking-slot,
+.slot-button {
+    border: 1px solid #d8e6e0;
+    border-radius: 9px;
+    background: #fff;
+    color: #174536;
+    transition: .2s ease;
+}
+
+.time-slot:hover,
+.booking-slot:hover,
+.slot-button:hover {
+    border-color: var(--booking-green-bright);
+    background: #ecfdf5;
+    color: var(--booking-green-dark);
+}
+
+.time-slot.active,
+.time-slot.selected,
+.booking-slot.active,
+.booking-slot.selected,
+.slot-button.active,
+.slot-button.selected {
+    border-color: var(--booking-green);
+    background: var(--booking-green);
+    color: #fff;
+}
+
+/* Tombol */
+.booking-page .btn,
+.booking-container .btn,
+.booking-content .btn {
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+.booking-page .btn-success,
+.booking-container .btn-success,
+.booking-content .btn-success {
+    border-color: var(--booking-green);
+    background: var(--booking-green);
+}
+
+.booking-page .btn-success:hover,
+.booking-container .btn-success:hover,
+.booking-content .btn-success:hover {
+    border-color: var(--booking-green-dark);
+    background: var(--booking-green-dark);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .booking-hero,
+    .booking-header,
+    .booking-page-hero {
+        padding: 48px 0 42px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .booking-hero h1,
+    .booking-header h1,
+    .booking-page-hero h1 {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+}
