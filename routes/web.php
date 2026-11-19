@@ -2,8 +2,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
@@ -11,18 +13,24 @@ use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\OwnerReportController;
 use App\Http\Controllers\OwnerGuardController;
 
-// Home
+// ==========================================
+// HOME
+// ==========================================
+
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
-// Register
+
+// ==========================================
+// REGISTER & LOGIN PELANGGAN
+// ==========================================
+
 Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('register');
 
 Route::post('/register', [AuthController::class, 'register'])
     ->name('register.submit');
 
-// Login & Logout
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('login');
 
@@ -31,14 +39,37 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-// Detail Lapangan
+
+// ==========================================
+// LOGIN & LOGOUT OWNER / PENJAGA
+// ==========================================
+
+Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])
+    ->name('admin.login');
+
+Route::post('/admin/login', [AdminAuthController::class, 'login'])
+    ->name('admin.login.submit');
+
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])
+    ->middleware('auth:admin')
+    ->name('admin.logout');
+
+
+// ==========================================
+// DETAIL LAPANGAN
+// ==========================================
+
 Route::get('/lapangan/martana-prime', [FieldController::class, 'prime'])
     ->name('fields.prime');
 
 Route::get('/lapangan/martana-arena', [FieldController::class, 'arena'])
     ->name('fields.arena');
 
-// Booking
+
+// ==========================================
+// BOOKING
+// ==========================================
+
 Route::get('/booking', [BookingController::class, 'index'])
     ->name('booking.index');
 
@@ -48,20 +79,27 @@ Route::post('/booking', [BookingController::class, 'store'])
 Route::post('/booking/checkout', [BookingController::class, 'store'])
     ->name('booking.checkout');
 
-// Payment
+
+// ==========================================
+// PAYMENT
+// ==========================================
+
 Route::get('/payment/{id}', [PaymentController::class, 'show'])
     ->name('payment.show');
 
 Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirm'])
     ->name('payment.confirm');
 
-// Owner
-Route::middleware('auth')
+
+// ==========================================
+// DASHBOARD OWNER
+// ==========================================
+
+Route::middleware(['auth:admin', 'role:owner'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
 
-        // Dashboard
         Route::get('/dashboard', [OwnerController::class, 'dashboard'])
             ->name('dashboard');
 
@@ -92,4 +130,20 @@ Route::middleware('auth')
         // Pengaturan
         Route::get('/pengaturan', [OwnerController::class, 'settings'])
             ->name('settings');
+    });
+
+
+// ==========================================
+// DASHBOARD PENJAGA
+// ==========================================
+
+Route::middleware(['auth:admin', 'role:penjaga'])
+    ->prefix('penjaga')
+    ->name('penjaga.')
+    ->group(function () {
+
+        Route::get('/dashboard', function () {
+            return view('penjaga.dashboard');
+        })->name('dashboard');
+
     });
