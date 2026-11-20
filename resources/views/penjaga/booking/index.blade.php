@@ -1,7 +1,10 @@
-
 @extends('penjaga.layouts.app')
 
 @section('content')
+
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 
 <style>
     .booking-heading {
@@ -35,7 +38,7 @@
 
     .booking-table {
         width: 100%;
-        min-width: 950px;
+        min-width: 1050px;
         border-collapse: collapse;
     }
 
@@ -53,14 +56,16 @@
         border-bottom: 1px solid #edf1ed;
         color: #39483f;
         font-size: 13px;
+        vertical-align: middle;
     }
 
     .status {
         display: inline-block;
-        padding: 5px 10px;
+        padding: 6px 11px;
         border-radius: 20px;
         font-size: 11px;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .pending {
@@ -82,15 +87,22 @@
         color: #176b3a;
         font-weight: 700;
         text-decoration: none;
+        white-space: nowrap;
     }
 
     .proof-link:hover {
         text-decoration: underline;
     }
 
+    .no-proof {
+        color: #87938b;
+        font-size: 12px;
+    }
+
     .action-form {
         display: flex;
         gap: 7px;
+        align-items: center;
     }
 
     .action-btn {
@@ -100,6 +112,7 @@
         font-size: 12px;
         font-weight: 700;
         cursor: pointer;
+        white-space: nowrap;
     }
 
     .confirm-btn {
@@ -107,9 +120,17 @@
         color: #207346;
     }
 
+    .confirm-btn:hover {
+        background: #c9ecd6;
+    }
+
     .cancel-btn {
         background: #fde8e7;
         color: #b33c35;
+    }
+
+    .cancel-btn:hover {
+        background: #fbd4d2;
     }
 
     .message {
@@ -134,6 +155,12 @@
         padding: 28px !important;
         color: #87938b !important;
     }
+
+    .waiting-action {
+        color: #9a6900;
+        font-size: 11px;
+        font-weight: 600;
+    }
 </style>
 
 <div class="booking-heading">
@@ -141,6 +168,7 @@
     <p>Periksa pemesanan dan bukti pembayaran pelanggan.</p>
 </div>
 
+{{-- NOTIFIKASI --}}
 @if (session('success'))
     <div class="message success-message">
         {{ session('success') }}
@@ -154,12 +182,15 @@
 @endif
 
 <div class="booking-card">
+
     <h3 style="font-size:17px;font-weight:700;color:#183f32;margin:0;">
         Daftar Pemesanan
     </h3>
 
     <div class="booking-table-wrap">
+
         <table class="booking-table">
+
             <thead>
                 <tr>
                     <th>Kode Booking</th>
@@ -176,92 +207,209 @@
             </thead>
 
             <tbody>
+
                 @forelse ($bookings as $booking)
+
+                    @php
+                        $method = strtolower($booking->payment_method ?? '');
+
+                        $isTransfer = in_array($method, ['bca', 'dana']);
+
+                        $hasProof = !empty($booking->proof_transfer);
+
+                        $canConfirm = $booking->status === 'pending'
+                            && !empty($method)
+                            && (!$isTransfer || $hasProof);
+
+                        $statusClass = match ($booking->status) {
+                            'pending' => 'pending',
+                            'confirmed' => 'confirmed',
+                            'cancelled' => 'cancelled',
+                            default => 'pending',
+                        };
+                    @endphp
+
                     <tr>
+
+                        {{-- KODE BOOKING --}}
                         <td>
-                            BKG-{{ str_pad($booking->id, 3, '0', STR_PAD_LEFT) }}
+                            <strong>
+                                BKG-{{ str_pad($booking->id, 3, '0', STR_PAD_LEFT) }}
+                            </strong>
                         </td>
 
-                        <td>{{ $booking->customer_name }}</td>
+                        {{-- PELANGGAN --}}
+                        <td>
+                            {{ $booking->customer_name ?? '-' }}
+                            <br>
+                            <small style="color:#87938b;">
+                                {{ $booking->phone ?? '-' }}
+                            </small>
+                        </td>
 
-                        <td>{{ $booking->court->name ?? $booking->field ?? '-' }}</td>
+                        {{-- LAPANGAN --}}
+                        <td>
+                            {{ $booking->court->name ?? '-' }}
+                        </td>
 
-                        <td>{{ $booking->booking_date }}</td>
+                        {{-- TANGGAL --}}
+                        <td>
+                            {{ \Carbon\Carbon::parse($booking->booking_date)->translatedFormat('d M Y') }}
+                        </td>
 
+                        {{-- JAM --}}
                         <td>
                             {{ substr($booking->start_time, 0, 5) }}
                             -
                             {{ substr($booking->end_time, 0, 5) }}
                         </td>
 
+                        {{-- TOTAL --}}
                         <td>
-                            Rp{{ number_format($booking->total_price, 0, ',', '.') }}
+                            <strong>
+                                Rp{{ number_format($booking->total_price, 0, ',', '.') }}
+                            </strong>
                         </td>
 
+                        {{-- METODE PEMBAYARAN --}}
                         <td>
-                            {{ strtoupper($booking->payment_method ?? 'Belum dipilih') }}
-                        </td>
-
-                        <td>
-                            @if ($booking->proof_transfer)
-                                <a class="proof-link"
-                                   href="{{ asset('storage/' . $booking->proof_transfer) }}"
-                                   target="_blank">
-                                    Lihat Bukti Transfer
-                                </a>
-                            @elseif ($booking->payment_method === 'cash')
-                                <span>Bayar di Tempat</span>
+                            @if ($method === 'bca')
+                                <strong>BCA</strong>
+                            @elseif ($method === 'dana')
+                                <strong>DANA</strong>
+                            @elseif ($method === 'cash')
+                                <strong>Cash</strong>
                             @else
-                                <span style="color:#87938b;">Belum ada bukti</span>
+                                <span style="color:#87938b;">
+                                    Belum dipilih
+                                </span>
                             @endif
                         </td>
 
+                        {{-- BUKTI PEMBAYARAN --}}
                         <td>
-                            <span class="status {{ $booking->status }}">
+                            @if ($hasProof)
+
+                                <a class="proof-link"
+                                   href="{{ Storage::disk('public')->url($booking->proof_transfer) }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+
+                                    <i class="bi bi-image"></i>
+                                    Lihat Bukti
+
+                                </a>
+
+                            @elseif ($method === 'cash')
+
+                                <span style="color:#207346;font-weight:600;">
+                                    Bayar di Tempat
+                                </span>
+
+                            @else
+
+                                <span class="no-proof">
+                                    Belum ada bukti
+                                </span>
+
+                            @endif
+                        </td>
+
+                        {{-- STATUS --}}
+                        <td>
+                            <span class="status {{ $statusClass }}">
                                 {{ ucfirst($booking->status) }}
                             </span>
                         </td>
 
+                        {{-- AKSI --}}
                         <td>
-                            @if ($booking->status === 'pending' && $booking->payment_method)
+
+                            @if ($canConfirm)
+
                                 <div class="action-form">
+
+                                    {{-- KONFIRMASI --}}
                                     <form action="{{ route('penjaga.booking.confirm', $booking->id) }}"
                                           method="POST"
-                                          onsubmit="return confirm('Yakin ingin mengonfirmasi booking ini?')">
+                                          onsubmit="return confirm('Pastikan pembayaran sudah diperiksa. Yakin ingin mengonfirmasi booking ini?')">
+
                                         @csrf
-                                        <button type="submit" class="action-btn confirm-btn">
+
+                                        <button type="submit"
+                                                class="action-btn confirm-btn">
+
+                                            <i class="bi bi-check-circle"></i>
                                             Konfirmasi
+
                                         </button>
+
                                     </form>
 
+                                    {{-- BATALKAN --}}
                                     <form action="{{ route('penjaga.booking.cancel', $booking->id) }}"
                                           method="POST"
                                           onsubmit="return confirm('Yakin ingin membatalkan booking ini?')">
+
                                         @csrf
-                                        <button type="submit" class="action-btn cancel-btn">
+
+                                        <button type="submit"
+                                                class="action-btn cancel-btn">
+
+                                            <i class="bi bi-x-circle"></i>
                                             Batalkan
+
                                         </button>
+
                                     </form>
+
                                 </div>
+
+                            @elseif ($booking->status === 'pending' && $isTransfer && !$hasProof)
+
+                                <span class="waiting-action">
+                                    Menunggu bukti
+                                </span>
+
+                            @elseif ($booking->status === 'pending' && !$method)
+
+                                <span class="waiting-action">
+                                    Menunggu pembayaran
+                                </span>
+
                             @else
-                                <span style="color:#87938b;">-</span>
+
+                                <span style="color:#87938b;">
+                                    -
+                                </span>
+
                             @endif
+
                         </td>
+
                     </tr>
+
                 @empty
+
                     <tr>
                         <td colspan="10" class="empty-message">
                             Belum ada data booking.
                         </td>
                     </tr>
+
                 @endforelse
+
             </tbody>
+
         </table>
+
     </div>
 
+    {{-- PAGINATION --}}
     <div style="margin-top:18px;">
         {{ $bookings->links() }}
     </div>
+
 </div>
 
 @endsection

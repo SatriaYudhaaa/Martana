@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Court;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -32,16 +33,29 @@ class BookingController extends Controller
     }
 
 // Menyimpan booking dan mengarahkan ke pembayaran
+
 public function store(Request $request)
 {
+    // Mengambil data pelanggan yang sedang login
+    $user = Auth::guard('web')->user();
+
+    if (!$user) {
+        return redirect()->route('login');
+    }
+
+    // Validasi data booking
     $validated = $request->validate([
-        'customer_name' => 'required|string|max:255',
-        'phone' => 'required|string|max:20',
         'court_id' => 'required|exists:courts,id',
         'booking_date' => 'required|date|after_or_equal:today',
         'start_time' => 'required|date_format:H:i',
         'end_time' => 'required|date_format:H:i|after:start_time',
     ]);
+
+    // Identitas pemesan dari akun pelanggan
+    $validated['user_id'] = $user->id;
+    $validated['customer_name'] = $user->name;
+    $validated['phone'] = $user->phone;
+
 
     $court = Court::where('is_active', true)
         ->findOrFail($validated['court_id']);

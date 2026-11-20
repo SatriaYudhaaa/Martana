@@ -76,23 +76,40 @@
                     <li class="nav-item navbar-auth-divider">
                         <span></span>
                     </li>
+                    
+            @if (Auth::check())
+                <li class="nav-item">
+                    <a href="{{ route('profile.index') }}"
+                    class="nav-link navbar-login-link"
+                    style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
 
-                    @if (Auth::check())
-                        <li class="nav-item">
-                            <span class="nav-link navbar-login-link">
-                                {{ Auth::user()->name }}
-                            </span>
-                        </li>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+                        </svg>
 
-                        <li class="nav-item">
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-martana navbar-booking-btn">
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-                    @else
+                        <span>{{ Auth::user()->name }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-martana navbar-booking-btn">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            @else
+
                         <li class="nav-item">
                             <a href="{{ route('login') }}" class="nav-link navbar-login-link">
                                 Login
