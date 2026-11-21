@@ -12,6 +12,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\OwnerReportController;
 use App\Http\Controllers\OwnerGuardController;
+use App\Http\Controllers\OwnerAttendanceController;
 use App\Http\Controllers\Penjaga\DashboardController;
 use App\Http\Controllers\Penjaga\PresensiController;
 use App\Http\Controllers\Penjaga\BookinggController;
@@ -169,6 +170,10 @@ Route::middleware(['auth:admin', 'role:owner'])
         // Pengaturan
         Route::get('/pengaturan', [OwnerController::class, 'settings'])
             ->name('settings');
+            
+        // Presensi Penjaga
+        Route::get('/presensi', [OwnerAttendanceController::class, 'index'])
+            ->name('attendances.index');
 
     });
 

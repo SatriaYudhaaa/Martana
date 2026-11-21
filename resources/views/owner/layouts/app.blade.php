@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -538,6 +537,12 @@
                class="{{ ($activeMenu ?? '') === 'guards' ? 'active' : '' }}">
                 <span class="menu-icon">♟</span>
                 <span class="menu-label">Kelola Penjaga</span>
+            </a>
+
+            <a href="{{ route('owner.attendances.index') }}"
+                class="{{ ($activeMenu ?? '') === 'attendances' ? 'active' : '' }}">
+                    <span class="menu-icon">✓</span>
+                    <span class="menu-label">Presensi Penjaga</span>
             </a>
 
         </nav>
