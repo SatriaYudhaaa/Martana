@@ -296,9 +296,7 @@
                                         <span class="price-unit">/ jam</span>
                                     </div>
 
-                                    <a href="{{ route('booking.index', [
-                                        'field' => $field['route'] === 'fields.prime' ? 'prime' : 'arena'
-                                    ]) }}" class="field-detail-link">
+                                    <a href="{{ route($field['route']) }}" class="field-detail-link">
                                         Booking
                                         <span aria-hidden="true">→</span>
                                     </a>

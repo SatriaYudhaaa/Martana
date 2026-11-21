@@ -1835,3 +1835,12 @@ body {
         font-size: clamp(2rem, 8vw, 3rem);
     }
 }
+
+.field-detail-link {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.field-detail-link:hover {
+    color: #ffffff !important;
+}
