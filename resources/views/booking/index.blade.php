@@ -1058,17 +1058,33 @@
                 </div>
 
                 <div class="modal-body">
+                    
                     <div class="mb-3">
                         <label for="customer_name" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="customer_name" id="customer_name"
-                               class="form-control" required maxlength="255">
+                        <input
+                            type="text"
+                            name="customer_name"
+                            id="customer_name"
+                            class="form-control"
+                            value="{{ Auth::guard('web')->user()?->name }}"
+                            readonly
+                            required
+                        >
                     </div>
 
                     <div class="mb-3">
                         <label for="phone" class="form-label">Nomor HP</label>
-                        <input type="tel" name="phone" id="phone"
-                               class="form-control" required maxlength="20">
+                        <input
+                            type="tel"
+                            name="phone"
+                            id="phone"
+                            class="form-control"
+                            value="{{ Auth::guard('web')->user()?->phone }}"
+                            readonly
+                            required
+                        >
                     </div>
+
 
                     <div class="modal-confirm">
                         <div class="mb-3">

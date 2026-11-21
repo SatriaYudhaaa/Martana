@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Models;
@@ -27,7 +28,7 @@ class Booking extends Model
     {
         return [
             'booking_date' => 'date',
-            'duration_hours' => 'decimal:2',
+            'duration_hours' => 'integer',
             'total_price' => 'decimal:2',
         ];
     }
@@ -39,7 +40,10 @@ class Booking extends Model
 
     public function transaction(): BelongsTo
     {
-        return $this->belongsTo(BookingTransaction::class, 'transaction_id');
+        return $this->belongsTo(
+            BookingTransaction::class,
+            'transaction_id'
+        );
     }
 
     public function user(): BelongsTo

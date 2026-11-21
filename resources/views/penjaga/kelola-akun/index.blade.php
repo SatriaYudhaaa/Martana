@@ -10,12 +10,13 @@
 <style>
     .account-stats {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 16px;
         margin-bottom: 22px;
     }
 
-    .account-card {
+    .account-card,
+    .account-panel {
         background: white;
         border: 1px solid #e8eeeb;
         border-radius: 13px;
@@ -34,17 +35,10 @@
         margin-top: 8px;
     }
 
-    .account-panel {
-        background: white;
-        border: 1px solid #e8eeeb;
-        border-radius: 13px;
-        padding: 20px;
-    }
-
     .account-toolbar {
         display: flex;
         gap: 12px;
-        margin-bottom: 20px;
+        margin: 18px 0;
         flex-wrap: wrap;
     }
 
@@ -55,11 +49,33 @@
         border-radius: 8px;
         outline: none;
         background: white;
+        font-family: inherit;
     }
 
     .account-toolbar input {
         flex: 1;
         min-width: 200px;
+    }
+
+    .account-toolbar button {
+        padding: 11px 18px;
+        border: none;
+        border-radius: 8px;
+        background: #08764f;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .reset-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 11px 15px;
+        border: 1px solid #dce5df;
+        border-radius: 8px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 13px;
     }
 
     .account-table {
@@ -87,10 +103,18 @@
         display: inline-block;
         padding: 5px 10px;
         border-radius: 20px;
-        background: #dcfce7;
-        color: #166534;
         font-size: 11px;
         font-weight: 700;
+    }
+
+    .badge-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-inactive {
+        background: #fee2e2;
+        color: #991b1b;
     }
 
     .detail-button {
@@ -154,58 +178,16 @@
         cursor: pointer;
     }
 
-    @media(max-width: 600px) {
+    .pagination-wrapper {
+        margin-top: 18px;
+    }
+
+    @media(max-width: 850px) {
         .account-stats {
             grid-template-columns: 1fr;
         }
     }
 </style>
-
-@php
-    // DATA SIMULASI PELANGGAN
-    $pelanggan = [
-        [
-            'id' => 1,
-            'nama' => 'Andi Saputra',
-            'email' => 'andi@gmail.com',
-            'telepon' => '081234567890',
-            'tanggal' => '05 November 2026',
-            'status' => 'Aktif'
-        ],
-        [
-            'id' => 2,
-            'nama' => 'Budi Pratama',
-            'email' => 'budi@gmail.com',
-            'telepon' => '081298765432',
-            'tanggal' => '06 November 2026',
-            'status' => 'Aktif'
-        ],
-        [
-            'id' => 3,
-            'nama' => 'Citra Amelia',
-            'email' => 'citra@gmail.com',
-            'telepon' => '082112345678',
-            'tanggal' => '06 November 2026',
-            'status' => 'Aktif'
-        ],
-        [
-            'id' => 4,
-            'nama' => 'Dimas Ramadhan',
-            'email' => 'dimas@gmail.com',
-            'telepon' => '085712345678',
-            'tanggal' => '07 November 2026',
-            'status' => 'Aktif'
-        ],
-        [
-            'id' => 5,
-            'nama' => 'Eka Putri',
-            'email' => 'eka@gmail.com',
-            'telepon' => '081345678912',
-            'tanggal' => '07 November 2026',
-            'status' => 'Aktif'
-        ],
-    ];
-@endphp
 
 {{-- STATISTIK --}}
 <div class="account-stats">
@@ -215,7 +197,7 @@
             <i class="bi bi-people me-2"></i>
             Total Akun Pelanggan
         </small>
-        <h3 id="totalPelanggan">{{ count($pelanggan) }}</h3>
+        <h3>{{ $totalPelanggan }}</h3>
     </div>
 
     <div class="account-card">
@@ -223,36 +205,65 @@
             <i class="bi bi-person-check me-2"></i>
             Akun Aktif
         </small>
-        <h3>{{ count(array_filter($pelanggan, fn($p) => $p['status'] === 'Aktif')) }}</h3>
+        <h3>{{ $totalAktif }}</h3>
+    </div>
+
+    <div class="account-card">
+        <small>
+            <i class="bi bi-person-x me-2"></i>
+            Akun Nonaktif
+        </small>
+        <h3>{{ $totalNonaktif }}</h3>
     </div>
 
 </div>
 
-{{-- TABEL PELANGGAN --}}
+{{-- DAFTAR PELANGGAN --}}
 <div class="account-panel">
 
-    <h4 style="font-size:16px;font-weight:700;margin-bottom:18px;">
+    <h4 style="font-size:16px;font-weight:700;">
         <i class="bi bi-person-lines-fill me-2" style="color:#08764f;"></i>
         Daftar Akun Pelanggan
     </h4>
 
-    <div class="account-toolbar">
+    {{-- PENCARIAN DAN FILTER --}}
+    <form action="{{ route('penjaga.kelola-akun') }}" method="GET">
+        <div class="account-toolbar">
 
-        <input
-            type="text"
-            id="cariPelanggan"
-            placeholder="Cari nama atau email pelanggan..."
-            oninput="filterPelanggan()">
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari nama atau email pelanggan..."
+            >
 
-        <select id="filterStatus" onchange="filterPelanggan()">
-            <option value="">Semua Status</option>
-            <option value="Aktif">Aktif</option>
-        </select>
+            <select name="status">
+                <option value="">Semua Status</option>
+                <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>
+                    Aktif
+                </option>
+                <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>
+                    Nonaktif
+                </option>
+            </select>
 
-    </div>
+            <button type="submit">
+                <i class="bi bi-search"></i>
+                Cari
+            </button>
 
+            <a href="{{ route('penjaga.kelola-akun') }}" class="reset-button">
+                Reset
+            </a>
+
+        </div>
+    </form>
+
+    {{-- TABEL --}}
     <div style="overflow-x:auto;">
+
         <table class="account-table">
+
             <thead>
                 <tr>
                     <th>No.</th>
@@ -264,54 +275,84 @@
                 </tr>
             </thead>
 
-            <tbody id="daftarPelanggan">
+            <tbody>
 
-                @foreach($pelanggan as $index => $p)
-                    <tr
-                        data-nama="{{ strtolower($p['nama']) }}"
-                        data-email="{{ strtolower($p['email']) }}"
-                        data-status="{{ $p['status'] }}">
+                @forelse($users as $index => $user)
 
-                        <td>{{ $index + 1 }}</td>
-                        <td><strong>{{ $p['nama'] }}</strong></td>
-                        <td>{{ $p['email'] }}</td>
-                        <td>{{ $p['telepon'] }}</td>
+                    <tr>
 
                         <td>
-                            <span class="account-badge">
-                                {{ $p['status'] }}
-                            </span>
+                            {{ $users->firstItem() + $index }}
+                        </td>
+
+                        <td>
+                            <strong>{{ $user->name }}</strong>
+                        </td>
+
+                        <td>{{ $user->email }}</td>
+
+                        <td>{{ $user->phone ?: '-' }}</td>
+
+                        <td>
+                            @if($user->is_active)
+                                <span class="account-badge badge-active">
+                                    Aktif
+                                </span>
+                            @else
+                                <span class="account-badge badge-inactive">
+                                    Nonaktif
+                                </span>
+                            @endif
                         </td>
 
                         <td>
                             <button
                                 type="button"
                                 class="detail-button"
-                                onclick='lihatDetail(@json($p))'>
+                                data-name="{{ $user->name }}"
+                                data-email="{{ $user->email }}"
+                                data-phone="{{ $user->phone ?: '-' }}"
+                                data-date="{{ $user->created_at ? $user->created_at->format('d F Y') : '-' }}"
+                                data-status="{{ $user->is_active ? 'Aktif' : 'Nonaktif' }}"
+                                onclick="lihatDetail(this)"
+                            >
                                 <i class="bi bi-eye"></i>
                                 Detail
                             </button>
                         </td>
+
                     </tr>
-                @endforeach
+
+                @empty
+
+                    <tr>
+                        <td colspan="6" style="text-align:center;padding:25px;">
+                            Tidak ada akun pelanggan ditemukan.
+                        </td>
+                    </tr>
+
+                @endforelse
 
             </tbody>
+
         </table>
+
     </div>
 
-    <div id="pesanKosong"
-         style="display:none;text-align:center;padding:25px;color:#94a3b8;">
-        Pelanggan tidak ditemukan.
+    {{-- PAGINATION --}}
+    <div class="pagination-wrapper">
+        {{ $users->links() }}
     </div>
 
     <p style="font-size:11px;color:#94a3b8;margin-top:15px;">
-        * Data di halaman ini masih berupa simulasi.
+        Data pelanggan diambil langsung dari database MARTANA.
     </p>
 
 </div>
 
 {{-- MODAL DETAIL --}}
 <div id="modalDetailAkun" class="account-modal" hidden>
+
     <div class="account-modal-content">
 
         <h3>
@@ -344,69 +385,34 @@
             <strong id="detailStatus"></strong>
         </div>
 
-        <button type="button"
-                class="close-button"
-                onclick="tutupDetail()">
+        <button
+            type="button"
+            class="close-button"
+            onclick="tutupDetail()"
+        >
             Tutup
         </button>
 
     </div>
+
 </div>
 
 <script>
-    function filterPelanggan() {
-        const keyword = document
-            .getElementById('cariPelanggan')
-            .value.toLowerCase();
-
-        const status = document
-            .getElementById('filterStatus')
-            .value;
-
-        const rows = document.querySelectorAll(
-            '#daftarPelanggan tr'
-        );
-
-        let jumlahTampil = 0;
-
-        rows.forEach(row => {
-            const nama = row.dataset.nama;
-            const email = row.dataset.email;
-            const statusAkun = row.dataset.status;
-
-            const cocokKeyword =
-                nama.includes(keyword) ||
-                email.includes(keyword);
-
-            const cocokStatus =
-                status === '' || statusAkun === status;
-
-            const tampil = cocokKeyword && cocokStatus;
-
-            row.style.display = tampil ? '' : 'none';
-
-            if (tampil) jumlahTampil++;
-        });
-
-        document.getElementById('pesanKosong').style.display =
-            jumlahTampil === 0 ? 'block' : 'none';
-    }
-
-    function lihatDetail(pelanggan) {
+    function lihatDetail(button) {
         document.getElementById('detailNama').textContent =
-            pelanggan.nama;
+            button.dataset.name;
 
         document.getElementById('detailEmail').textContent =
-            pelanggan.email;
+            button.dataset.email;
 
         document.getElementById('detailTelepon').textContent =
-            pelanggan.telepon;
+            button.dataset.phone;
 
         document.getElementById('detailTanggal').textContent =
-            pelanggan.tanggal;
+            button.dataset.date;
 
         document.getElementById('detailStatus').textContent =
-            pelanggan.status;
+            button.dataset.status;
 
         document.getElementById('modalDetailAkun').hidden = false;
     }
@@ -423,6 +429,12 @@
             }
         }
     );
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            tutupDetail();
+        }
+    });
 </script>
 
 @endsection

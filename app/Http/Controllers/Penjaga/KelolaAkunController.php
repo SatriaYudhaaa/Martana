@@ -8,13 +8,27 @@ use Illuminate\Http\Request;
 
 class KelolaAkunController extends Controller
 {
+    
     public function index(Request $request)
     {
-        $query = User::query();
+        // Query khusus akun pelanggan
+        $baseQuery = User::where('role', 'pelanggan');
 
-        // Hanya tampilkan akun pelanggan
-        // Sesuaikan kondisi role setelah kita cek struktur tabel users.
+        // Statistik akun berdasarkan database
+        $totalPelanggan = (clone $baseQuery)->count();
 
+        $totalAktif = (clone $baseQuery)
+            ->where('is_active', true)
+            ->count();
+
+        $totalNonaktif = (clone $baseQuery)
+            ->where('is_active', false)
+            ->count();
+
+        // Query daftar pelanggan
+        $query = User::where('role', 'pelanggan');
+
+        // Pencarian nama atau email
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -24,8 +38,24 @@ class KelolaAkunController extends Controller
             });
         }
 
-        $users = $query->latest()->paginate(10)->withQueryString();
+        // Filter status akun
+        if ($request->status === 'aktif') {
+            $query->where('is_active', true);
+        } elseif ($request->status === 'nonaktif') {
+            $query->where('is_active', false);
+        }
 
-        return view('penjaga.kelola-akun.index', compact('users'));
+        // Ambil data pelanggan
+        $users = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('penjaga.kelola-akun.index', compact(
+            'users',
+            'totalPelanggan',
+            'totalAktif',
+            'totalNonaktif'
+        ));
     }
 }
