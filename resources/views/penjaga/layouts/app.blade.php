@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -59,6 +60,13 @@
             justify-content: center;
             font-size: 25px;
             flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .brand-name {
@@ -143,6 +151,7 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            flex-shrink: 0;
         }
 
         .profile-name {
@@ -322,9 +331,14 @@
 
 <body>
 
+    @php
+        $penjaga = auth('admin')->user();
+    @endphp
+
     {{-- SIDEBAR --}}
     <aside class="sidebar">
 
+        {{-- BRAND --}}
         <div class="brand">
             <div class="brand-logo">
                 <img src="{{ asset('images/martana-logo.png') }}" alt="Logo Martana">
@@ -338,34 +352,40 @@
 
         <div class="menu-label">MENU UTAMA</div>
 
+        {{-- MENU NAVIGASI --}}
         <nav class="menu-list">
 
-            <a href="{{ url('/penjaga') }}"
-               class="menu-item {{ request()->is('penjaga') ? 'active' : '' }}">
+            {{-- DASHBOARD --}}
+            <a href="{{ route('penjaga.dashboard') }}"
+               class="menu-item {{ request()->routeIs('penjaga.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2"></i>
                 <span>Dashboard</span>
             </a>
 
-            <a href="{{ url('/penjaga/presensi') }}"
-               class="menu-item {{ request()->is('penjaga/presensi*') ? 'active' : '' }}">
+            {{-- PRESENSI --}}
+            <a href="{{ route('penjaga.presensi') }}"
+               class="menu-item {{ request()->routeIs('penjaga.presensi*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-plus"></i>
                 <span>Presensi</span>
             </a>
 
-            <a href="{{ url('/penjaga/booking') }}"
-               class="menu-item {{ request()->is('penjaga/booking*') ? 'active' : '' }}">
+            {{-- BOOKING --}}
+            <a href="{{ route('penjaga.booking') }}"
+               class="menu-item {{ request()->routeIs('penjaga.booking*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-event"></i>
                 <span>Booking</span>
             </a>
 
-            <a href="{{ url('/penjaga/transaksi') }}"
-               class="menu-item {{ request()->is('penjaga/transaksi*') ? 'active' : '' }}">
+            {{-- TRANSAKSI --}}
+            <a href="{{ route('penjaga.transaksi') }}"
+               class="menu-item {{ request()->routeIs('penjaga.transaksi*') ? 'active' : '' }}">
                 <i class="bi bi-wallet2"></i>
                 <span>Transaksi</span>
             </a>
 
-            <a href="{{ url('/penjaga/kelola-akun') }}"
-                class="menu-item {{ request()->is('penjaga/kelola-akun*') ? 'active' : '' }}">
+            {{-- KELOLA AKUN --}}
+            <a href="{{ route('penjaga.kelola-akun') }}"
+               class="menu-item {{ request()->routeIs('penjaga.kelola-akun*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i>
                 <span>Kelola Akun</span>
             </a>
@@ -381,14 +401,18 @@
                 </div>
 
                 <div class="profile-text">
-                    <div class="profile-name">Penjaga</div>
+                    <div class="profile-name">
+                        {{ $penjaga->name ?? 'Penjaga' }}
+                    </div>
+
                     <div class="profile-email">
-                        {{ auth()->user()->email ?? 'petugas@martana.id' }}
+                        {{ $penjaga->email ?? 'petugas@martana.id' }}
                     </div>
                 </div>
             </div>
 
-            <form action="{{ url('/logout') }}" method="POST">
+            {{-- LOGOUT ADMIN --}}
+            <form action="{{ route('admin.logout') }}" method="POST">
                 @csrf
 
                 <button type="submit" class="logout-button">
@@ -404,10 +428,12 @@
     {{-- KONTEN UTAMA --}}
     <main class="main">
 
+        {{-- TOPBAR --}}
         <header class="topbar">
 
             <div>
                 <div class="topbar-title">Panel Penjaga</div>
+
                 <div class="topbar-subtitle">
                     Sistem Informasi Pengelolaan Lapangan Futsal Martana
                 </div>
@@ -420,10 +446,12 @@
 
         </header>
 
+        {{-- CONTENT --}}
         <section class="content">
 
             <div class="page-heading">
                 <h1>@yield('page-title', 'Dashboard Penjaga')</h1>
+
                 <p>
                     @yield('page-description', 'Kelola operasional lapangan Martana Futsal.')
                 </p>

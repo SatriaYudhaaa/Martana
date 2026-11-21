@@ -10,9 +10,11 @@ class PresensiController extends Controller
 {
     public function index()
     {
-        $attendance = DB::table('presensis')
-            ->where('user_id', Auth::id())
-            ->where('tanggal', now()->toDateString())
+        $guard = Auth::guard('admin')->user();
+
+        $attendance = DB::table('guard_attendances')
+            ->where('guard_id', $guard->id)
+            ->whereDate('attendance_date', now()->toDateString())
             ->first();
 
         return view('penjaga.presensi.index', compact('attendance'));
@@ -20,12 +22,12 @@ class PresensiController extends Controller
 
     public function masuk()
     {
-        $userId = Auth::id();
+        $guard = Auth::guard('admin')->user();
         $tanggal = now()->toDateString();
 
-        $sudahPresensi = DB::table('presensis')
-            ->where('user_id', $userId)
-            ->where('tanggal', $tanggal)
+        $sudahPresensi = DB::table('guard_attendances')
+            ->where('guard_id', $guard->id)
+            ->whereDate('attendance_date', $tanggal)
             ->exists();
 
         if ($sudahPresensi) {
@@ -34,10 +36,11 @@ class PresensiController extends Controller
                 ->with('info', 'Kamu sudah melakukan presensi masuk hari ini.');
         }
 
-        DB::table('presensis')->insert([
-            'user_id' => $userId,
-            'tanggal' => $tanggal,
-            'jam_masuk' => now()->format('H:i:s'),
+        DB::table('guard_attendances')->insert([
+            'guard_id' => $guard->id,
+            'attendance_date' => $tanggal,
+            'check_in' => now()->format('H:i:s'),
+            'status' => 'hadir',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

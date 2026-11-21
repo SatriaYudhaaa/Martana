@@ -1,10 +1,10 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\BookingController;
@@ -12,6 +12,12 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\OwnerReportController;
 use App\Http\Controllers\OwnerGuardController;
+use App\Http\Controllers\Penjaga\DashboardController;
+use App\Http\Controllers\Penjaga\PresensiController;
+use App\Http\Controllers\Penjaga\BookinggController;
+use App\Http\Controllers\Penjaga\TransaksiController;
+use App\Http\Controllers\Penjaga\KelolaAkunController;
+
 
 // ==========================================
 // HOME
@@ -38,6 +44,21 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+
+// ==========================================
+// PROFIL PELANGGAN
+// ==========================================
+
+Route::middleware('auth:web')->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('profile.index');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+});
 
 
 // ==========================================
@@ -70,25 +91,43 @@ Route::get('/lapangan/martana-arena', [FieldController::class, 'arena'])
 // BOOKING
 // ==========================================
 
-Route::get('/booking', [BookingController::class, 'index'])
-    ->name('booking.index');
+Route::middleware('auth:web')->group(function () {
 
-Route::post('/booking', [BookingController::class, 'store'])
-    ->name('booking.store');
+    Route::get('/booking', [BookingController::class, 'index'])
+        ->name('booking.index');
 
-Route::post('/booking/checkout', [BookingController::class, 'store'])
-    ->name('booking.checkout');
+    Route::post('/booking', [BookingController::class, 'store'])
+        ->name('booking.store');
+
+    Route::post('/booking/checkout', [BookingController::class, 'store'])
+        ->name('booking.checkout');
+
+});
 
 
 // ==========================================
 // PAYMENT
 // ==========================================
 
-Route::get('/payment/{id}', [PaymentController::class, 'show'])
-    ->name('payment.show');
+Route::middleware('auth:web')->group(function () {
 
-Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirm'])
-    ->name('payment.confirm');
+    // Halaman pembayaran
+    Route::get('/payment/{id}', [PaymentController::class, 'show'])
+        ->name('payment.show');
+
+    // Mengirim pembayaran
+    Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirm'])
+        ->name('payment.confirm');
+
+    // Halaman menunggu verifikasi
+    Route::get('/payment/{id}/waiting', [PaymentController::class, 'waiting'])
+        ->name('payment.waiting');
+
+    // Kwitansi pelanggan dalam format PNG
+    Route::get('/payment/{id}/receipt', [PaymentController::class, 'receipt'])
+        ->name('payment.receipt');
+
+});
 
 
 // ==========================================
@@ -130,6 +169,7 @@ Route::middleware(['auth:admin', 'role:owner'])
         // Pengaturan
         Route::get('/pengaturan', [OwnerController::class, 'settings'])
             ->name('settings');
+
     });
 
 
@@ -142,8 +182,34 @@ Route::middleware(['auth:admin', 'role:penjaga'])
     ->name('penjaga.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('penjaga.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/presensi', [PresensiController::class, 'index'])
+            ->name('presensi');
+
+        Route::post('/presensi/masuk', [PresensiController::class, 'masuk'])
+            ->name('presensi.masuk');
+
+        // Booking
+        Route::get('/booking', [BookinggController::class, 'index'])
+            ->name('booking');
+
+        Route::post('/booking/{id}/confirm', [BookinggController::class, 'confirm'])
+            ->name('booking.confirm');
+
+        Route::post('/booking/{id}/cancel', [BookinggController::class, 'cancel'])
+            ->name('booking.cancel');
+
+        // Transaksi
+        Route::get('/transaksi', [TransaksiController::class, 'index'])
+            ->name('transaksi');
+
+        Route::get('/transaksi/{id}/kwitansi', [TransaksiController::class, 'kwitansi'])
+            ->name('transaksi.kwitansi');
+
+        // Kelola akun
+        Route::get('/kelola-akun', [KelolaAkunController::class, 'index'])
+            ->name('kelola-akun');
 
     });

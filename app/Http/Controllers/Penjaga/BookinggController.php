@@ -21,15 +21,33 @@ class BookinggController extends Controller
     {
         $booking = Booking::findOrFail($id);
 
+        // Pastikan booking belum diproses
         if ($booking->status !== 'pending') {
             return back()->with('error', 'Booking ini sudah diproses.');
         }
 
+        // Pastikan metode pembayaran sudah dipilih
+        if (empty($booking->payment_method)) {
+            return back()->with('error', 'Metode pembayaran belum dipilih.');
+        }
+
+        // Transfer wajib memiliki bukti pembayaran
+        if (
+            in_array(strtolower($booking->payment_method), ['bca', 'dana'])
+            && empty($booking->proof_transfer)
+        ) {
+            return back()->with('error', 'Bukti transfer belum tersedia.');
+        }
+
+        // Konfirmasi pembayaran
         $booking->update([
             'status' => 'confirmed',
         ]);
 
-        return back()->with('success', 'Booking berhasil dikonfirmasi.');
+        return back()->with(
+            'success',
+            'Pembayaran berhasil diverifikasi dan booking dikonfirmasi.'
+        );
     }
 
     public function cancel($id)
@@ -44,6 +62,9 @@ class BookinggController extends Controller
             'status' => 'cancelled',
         ]);
 
-        return back()->with('success', 'Booking berhasil dibatalkan.');
+        return back()->with(
+            'success',
+            'Booking berhasil dibatalkan.'
+        );
     }
 }
