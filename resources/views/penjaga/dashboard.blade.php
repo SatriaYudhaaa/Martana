@@ -7,6 +7,26 @@
 
 @section('content')
 
+
+@if(session('success'))
+    <div style="padding:12px 15px; margin-bottom:15px; background:#dcfce7; color:#166534; border-radius:8px;">
+        <i class="bi bi-check-circle-fill"></i>
+        {{ session('success') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div style="padding:12px 15px; margin-bottom:15px; background:#fee2e2; color:#991b1b; border-radius:8px;">
+        <strong>Upload gagal:</strong>
+        <ul style="margin:5px 0 0 18px;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
 <style>
     .stats-grid {
         display: grid;
@@ -247,6 +267,143 @@
         line-height: 1.5;
     }
 
+    /* TOMBOL UPLOAD LAPORAN */
+    .report-upload-btn {
+        margin-left: auto;
+        border: 0;
+        border-radius: 8px;
+        background: #08764f;
+        color: #fff;
+        padding: 8px 11px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .report-upload-btn:hover {
+        background: #066b41;
+    }
+
+    /* MODAL UPLOAD LAPORAN */
+    .report-modal[hidden] {
+        display: none !important;
+    }
+
+    .report-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(0,0,0,.55);
+    }
+
+    .report-modal-content {
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 25px;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 10px 40px rgba(0,0,0,.2);
+        text-align: left;
+    }
+
+    .report-modal-content h3 {
+        margin: 0 0 7px;
+        color: #183b2e;
+        font-size: 20px;
+    }
+
+    .report-modal-content .report-help {
+        margin-bottom: 18px;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .report-form-group {
+        margin-bottom: 14px;
+    }
+
+    .report-form-group label {
+        display: block;
+        margin-bottom: 6px;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .report-form-group input,
+    .report-form-group textarea,
+    .report-form-group select {
+        width: 100%;
+        border: 1px solid #dbe3df;
+        border-radius: 8px;
+        padding: 10px 11px;
+        color: #334155;
+        font: inherit;
+        font-size: 12px;
+        box-sizing: border-box;
+    }
+
+    .report-form-group textarea {
+        min-height: 85px;
+        resize: vertical;
+    }
+
+    .report-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 9px;
+        margin-top: 18px;
+    }
+
+    .report-modal-actions button {
+        border: 0;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .report-cancel-btn {
+        background: #e5e7eb;
+        color: #475569;
+    }
+
+    .report-submit-btn {
+        background: #08764f;
+        color: #fff;
+    }
+
+    .report-submit-btn:hover {
+        background: #066b41;
+    }
+
+    .report-upload-note {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 10px;
+        line-height: 1.5;
+    }
+
+    .report-status {
+        display: inline-block;
+        margin-top: 5px;
+        padding: 4px 8px;
+        border-radius: 20px;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
     /* POP UP PRESENSI */
     .modal-martana[hidden] {
         display: none !important;
@@ -372,7 +529,7 @@
             <i class="bi bi-clipboard-check"></i>
         </div>
         <div>
-            <small>Laporan Menunggu</small>
+            <small>Total Laporan Terkirim</small>
             <h3>{{ $pendingReports }}</h3>
         </div>
     </div>
@@ -446,7 +603,93 @@
 
 </div>
 
-{{-- POP UP BERHASIL --}}
+{{-- MODAL UPLOAD LAPORAN --}}
+<div id="modalUploadLaporan" class="report-modal" hidden>
+    <div class="report-modal-content">
+
+        <h3>Upload Laporan</h3>
+
+        <p class="report-help">
+            Unggah PDF laporan booking atau transaksi yang sudah diunduh dari sistem Martana.
+        </p>
+
+
+        <form
+            action="{{ route('penjaga.laporan.store') }}"
+            method="POST"
+            enctype="multipart/form-data">
+
+            @csrf
+
+            <div class="report-form-group">
+                <label for="judulLaporan">Judul Laporan</label>
+                <input
+                    type="text"
+                    id="judulLaporan"
+                    name="judul"
+                    value="{{ old('judul') }}"
+                    placeholder="Contoh: Laporan Booking November 2026"
+                    maxlength="255"
+                    required>
+            </div>
+
+            <div class="report-form-group">
+                <label for="jenisLaporan">Jenis Laporan</label>
+
+                <select id="jenisLaporan" name="jenis_laporan" required>
+                    <option value="">Pilih jenis laporan</option>
+                    <option value="booking">Laporan Booking</option>
+                    <option value="transaksi">Laporan Transaksi</option>
+                    <option value="booking_transaksi">Laporan Booking dan Transaksi</option>
+                    <option value="lainnya">Laporan Lainnya</option>
+                </select>
+            </div>
+
+            <div class="report-form-group">
+                <label for="deskripsiLaporan">Keterangan</label>
+
+                <textarea
+                    id="deskripsiLaporan"
+                    name="keterangan"
+                    placeholder="Tambahkan keterangan singkat laporan..."
+                    maxlength="1000">{{ old('keterangan') }}</textarea>
+            </div>
+
+            <div class="report-form-group">
+                <label for="fileLaporan">File Laporan</label>
+
+                <input
+                    type="file"
+                    id="fileLaporan"
+                    name="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx"
+                    required>
+
+                <p class="report-upload-note">
+                    Format PDF, Word, atau Excel. Ukuran maksimal 10 MB.
+                </p>
+            </div>
+
+            <div class="report-modal-actions">
+                <button
+                    type="button"
+                    class="report-cancel-btn"
+                    onclick="tutupModalUploadLaporan()">
+                    Batal
+                </button>
+
+                <button type="submit" class="report-submit-btn">
+                    <i class="bi bi-send"></i>
+                    Kirim ke Owner
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{{-- POP UP BERHASIL PRESENSI --}}
 <div id="modalPresensiDashboard" class="modal-martana" hidden>
     <div class="modal-martana-content">
 
@@ -465,9 +708,10 @@
     </div>
 </div>
 
-{{-- JADWAL BOOKING --}}
+{{-- JADWAL BOOKING DAN LAPORAN --}}
 <div class="dashboard-grid">
 
+    {{-- JADWAL BOOKING --}}
     <div class="panel">
 
         <div class="panel-title">
@@ -481,6 +725,7 @@
 
         <div class="table-wrap">
             <table class="booking-table">
+
                 <thead>
                     <tr>
                         <th>Waktu</th>
@@ -490,6 +735,7 @@
                 </thead>
 
                 <tbody>
+
                     @forelse($todayBookings as $booking)
 
                         @php
@@ -497,6 +743,7 @@
                         @endphp
 
                         <tr>
+
                             <td>
                                 {{ $booking->start_time ?? '-' }}
                                 -
@@ -514,22 +761,28 @@
                                         : ($status == 'pending'
                                             ? 'status-pending'
                                             : 'status-other') }}">
+
                                     {{ ucfirst($booking->status ?? 'Tidak diketahui') }}
+
                                 </span>
                             </td>
+
                         </tr>
 
                     @empty
+
                         <tr>
                             <td colspan="3" class="empty-state">
-                                <i class="bi bi-calendar-x"
-                                   style="font-size:25px"></i>
+                                <i class="bi bi-calendar-x" style="font-size:25px"></i>
                                 <br>
                                 Belum ada booking hari ini.
                             </td>
                         </tr>
+
                     @endforelse
+
                 </tbody>
+
             </table>
         </div>
 
@@ -547,38 +800,85 @@
             </a>
         </div>
 
+        {{-- TOMBOL UPLOAD --}}
+        <div style="display:flex; justify-content:flex-end; margin:-8px 0 10px;">
+
+            <button
+                type="button"
+                class="report-upload-btn"
+                onclick="bukaModalUploadLaporan()">
+
+                <i class="bi bi-upload"></i>
+                Upload Laporan
+
+            </button>
+
+        </div>
+
+        {{-- DAFTAR LAPORAN TERAKHIR --}}
         @forelse($recentReports as $report)
 
             <div class="report-item">
-                <i class="bi bi-file-earmark-text report-icon"></i>
 
-                <div>
-                    <strong>
-                        {{ $report->judul ?? 'Laporan Operasional' }}
-                    </strong>
+                <i class="bi bi-file-earmark-pdf report-icon"></i>
+
+                <div style="flex:1; min-width:0;">
+
+                    <strong>{{ $report->judul }}</strong>
 
                     <p>
-                        {{ $report->deskripsi ?? '-' }}
+                        {{ $report->jenis_laporan }}
+                        <br>
+                        {{ $report->keterangan ?? 'Tidak ada keterangan' }}
+                        <br>
+                        <small>
+                            {{ $report->created_at->format('d/m/Y H:i') }}
+                        </small>
                     </p>
+
                 </div>
+
             </div>
 
         @empty
 
             <div class="empty-state">
-                <i class="bi bi-file-earmark"
-                   style="font-size:25px"></i>
+                <i class="bi bi-file-earmark" style="font-size:25px"></i>
                 <br>
                 Belum ada laporan terbaru.
             </div>
 
         @endforelse
 
+
     </div>
 
 </div>
 
 <script>
+    // ==========================================
+    // MODAL UPLOAD LAPORAN
+    // ==========================================
+
+    function bukaModalUploadLaporan() {
+        document.getElementById('modalUploadLaporan').hidden = false;
+    }
+
+    function tutupModalUploadLaporan() {
+        document.getElementById('modalUploadLaporan').hidden = true;
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            tutupModalUploadLaporan();
+        }
+    });
+
+
+    // ==========================================
+    // PRESENSI DASHBOARD
+    // ==========================================
+
     function tanggalPresensiDashboard() {
         const sekarang = new Date();
 
@@ -588,6 +888,11 @@
 
         return `${tahun}-${bulan}-${hari}`;
     }
+
+
+    // ==========================================
+    // JAM DIGITAL
+    // ==========================================
 
     function updateClock() {
         const now = new Date();
@@ -600,7 +905,13 @@
             `${hours}:${minutes}:${seconds}`;
     }
 
+
+    // ==========================================
+    // UPDATE STATUS PRESENSI
+    // ==========================================
+
     function perbaruiDashboardPresensi() {
+
         const data = JSON.parse(
             localStorage.getItem('presensiMartana') || '{}'
         );
@@ -614,12 +925,14 @@
         const statusRingkasan = document.getElementById('ringkasanStatus');
 
         if (data.tanggal === tanggalHariIni) {
+
             status.innerHTML = `
                 <i class="bi bi-check-circle-fill"></i>
                 Sudah Presensi Masuk (${data.jam})
             `;
 
             tombol.disabled = true;
+
             tombol.innerHTML = `
                 <i class="bi bi-check-circle"></i>
                 Sudah Presensi Masuk
@@ -630,12 +943,14 @@
             statusRingkasan.style.color = '#08764f';
 
         } else {
+
             status.innerHTML = `
                 <i class="bi bi-info-circle-fill"></i>
                 Belum Melakukan Presensi Masuk
             `;
 
             tombol.disabled = false;
+
             tombol.innerHTML = `
                 <i class="bi bi-arrow-right-circle"></i>
                 Presensi Masuk
@@ -644,10 +959,17 @@
             jamMasuk.textContent = '-';
             statusRingkasan.textContent = 'Belum Presensi';
             statusRingkasan.style.color = '#d97706';
+
         }
     }
 
+
+    // ==========================================
+    // PRESENSI MASUK
+    // ==========================================
+
     function presensiMasukDashboard() {
+
         const tanggalHariIni = tanggalPresensiDashboard();
 
         const dataLama = JSON.parse(
@@ -679,14 +1001,26 @@
         document.getElementById('modalPresensiDashboard').hidden = false;
     }
 
+
+    // ==========================================
+    // TUTUP POPUP PRESENSI
+    // ==========================================
+
     function tutupModalDashboard() {
         document.getElementById('modalPresensiDashboard').hidden = true;
     }
 
+
+    // ==========================================
+    // INISIALISASI DASHBOARD
+    // ==========================================
+
     updateClock();
+
     setInterval(updateClock, 1000);
 
     perbaruiDashboardPresensi();
+
 </script>
 
 @endsection

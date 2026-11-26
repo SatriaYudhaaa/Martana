@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Penjaga;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Court;
+use App\Models\Laporan;
 
 class DashboardController extends Controller
 {
@@ -38,9 +39,15 @@ class DashboardController extends Controller
             ->where('status', 'confirmed')
             ->sum('total_price');
 
-        // Data laporan dan presensi belum dibuat
-        $pendingReports = 0;
-        $recentReports = collect();
+        // Total laporan yang sudah diunggah
+        $pendingReports = Laporan::count();
+
+        // Lima laporan terbaru
+        $recentReports = Laporan::latest()
+            ->take(5)
+            ->get();
+
+        // Data presensi
         $attendance = null;
 
         return view('penjaga.dashboard', compact(

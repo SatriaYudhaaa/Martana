@@ -7,6 +7,7 @@
     <title>Daftar Akun | MARTANA</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
         :root {
@@ -85,6 +86,13 @@
             font-weight: 750;
         }
 
+        .required-label {
+            color: #dc3545;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
         .form-control {
             min-height: 50px;
             padding: 12px 15px;
@@ -104,6 +112,32 @@
             margin-top: 6px;
             color: var(--muted);
             font-size: 12px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 48px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #718096;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .toggle-password:hover {
+            color: var(--green);
         }
 
         .btn-register {
@@ -166,8 +200,10 @@
         }
     </style>
 </head>
+
 <body>
     <main class="register-card">
+
         <div class="brand">
             <img src="{{ asset('images/martana-logo.png') }}" alt="Logo MARTANA">
             <span>MARTANA</span>
@@ -176,6 +212,7 @@
         <h1 class="form-title">Buat Akun</h1>
         <p class="form-subtitle">Gabung dan mulai booking lapangan favoritmu.</p>
 
+        <!-- VALIDATION ERROR -->
         @if ($errors->any())
             <div class="alert alert-danger rounded-3">
                 <ul class="mb-0 ps-3">
@@ -189,8 +226,12 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
+            <!-- NAMA LENGKAP -->
             <div class="mb-3">
-                <label for="name" class="form-label">Nama Lengkap</label>
+                <label for="name" class="form-label">
+                    Nama Lengkap <span class="required-label">* wajib diisi</span>
+                </label>
+
                 <input
                     type="text"
                     id="name"
@@ -203,8 +244,12 @@
                 >
             </div>
 
+            <!-- EMAIL -->
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
+                <label for="email" class="form-label">
+                    Email <span class="required-label">* wajib diisi</span>
+                </label>
+
                 <input
                     type="email"
                     id="email"
@@ -217,8 +262,12 @@
                 >
             </div>
 
+            <!-- NOMOR HP -->
             <div class="mb-3">
-                <label for="phone" class="form-label">Nomor HP</label>
+                <label for="phone" class="form-label">
+                    Nomor HP <span class="required-label">* wajib diisi</span>
+                </label>
+
                 <input
                     type="tel"
                     id="phone"
@@ -233,35 +282,68 @@
                     autocomplete="tel"
                     required
                 >
-                <div class="form-text">Nomor harus diawali 08 dan terdiri dari 12 digit.</div>
+
+                <div class="form-text">
+                    Nomor harus diawali 08 dan terdiri dari 12 digit.
+                </div>
             </div>
 
+            <!-- PASSWORD -->
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    class="form-control"
-                    placeholder="Minimal 8 karakter"
-                    minlength="8"
-                    autocomplete="new-password"
-                    required
-                >
+                <label for="password" class="form-label">
+                    Password <span class="required-label">* wajib diisi</span>
+                </label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Minimal 8 karakter"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('password', this)"
+                        aria-label="Tampilkan password"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
             </div>
 
+            <!-- KONFIRMASI PASSWORD -->
             <div class="mb-4">
-                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                <input
-                    type="password"
-                    id="password_confirmation"
-                    name="password_confirmation"
-                    class="form-control"
-                    placeholder="Ulangi password"
-                    minlength="8"
-                    autocomplete="new-password"
-                    required
-                >
+                <label for="password_confirmation" class="form-label">
+                    Konfirmasi Password <span class="required-label">* wajib diisi</span>
+                </label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        class="form-control"
+                        placeholder="Ulangi password"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('password_confirmation', this)"
+                        aria-label="Tampilkan konfirmasi password"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-register w-100">
@@ -275,20 +357,39 @@
             Sudah punya akun?
             <a href="{{ route('login') }}" class="login-link">Login</a>
         </p>
+
     </main>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    @if (session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: @json(session('success')),
-            confirmButtonText: 'Oke',
-            confirmButtonColor: '#087f5b'
-        });
-    @endif
-</script>
+    <script>
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+                button.setAttribute('aria-label', 'Sembunyikan password');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+                button.setAttribute('aria-label', 'Tampilkan password');
+            }
+        }
+
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: @json(session('success')),
+                confirmButtonText: 'Oke',
+                confirmButtonColor: '#087f5b'
+            });
+        @endif
+    </script>
 </body>
 </html>

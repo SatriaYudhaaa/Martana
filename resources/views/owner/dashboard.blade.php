@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -40,19 +39,6 @@
             top: 0;
         }
 
-        <div class="brand">
-    <img
-        src="{{ asset('images/martana-logo.png') }}"
-        alt="Logo Martana"
-        class="brand-logo"
-    >
-
-    <div class="brand-info">
-        <h2>MARTANA</h2>
-        <p>OWNER PANEL</p>
-    </div>
-</div>
-
         .menu-title {
             color: #a9c8ba;
             font-size: 11px;
@@ -86,13 +72,38 @@
         }
 
         .menu-icon {
-            width: 31px;
-            height: 31px;
+            width: 36px;
+            height: 36px;
             display: grid;
             place-items: center;
             border-radius: 9px;
             background: rgba(220, 248, 234, .13);
-            font-size: 16px;
+            color: #d9f3e7;
+            flex-shrink: 0;
+            transition: .2s;
+        }
+
+        .menu-icon svg,
+        .stat-icon svg,
+        .summary-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .menu a.active .menu-icon {
+            background: #d9f3e7;
+            color: #145b43;
+        }
+
+        .stat-icon svg,
+        .summary-icon svg {
+            width: 21px;
+            height: 21px;
         }
 
         .sidebar-bottom {
@@ -463,80 +474,133 @@
 <div class="dashboard">
 
     <!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="brand" style="
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 12px;
-        width: 100%;
-        padding: 5px 7px 24px;
-        border-bottom: 1px solid rgba(255,255,255,.15);
-    ">
-        <img
-            src="{{ asset('images/logo-martana.png') }}"
-            alt="Logo Martana"
-            style="
-                width: 48px;
-                height: 48px;
-                object-fit: contain;
-                flex-shrink: 0;
-                display: block;
-                border-radius: 8px;
-            "
-        >
+    <aside class="sidebar">
 
-        <div class="brand-text" style="
+        <div class="brand" style="
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-width: 0;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            width: 100%;
+            padding: 5px 7px 24px;
+            border-bottom: 1px solid rgba(255,255,255,.15);
         ">
-            <h2 style="
-                color: #ffffff;
-                font-size: 20px;
-                font-weight: 800;
-                letter-spacing: .5px;
-                line-height: 1.2;
-                margin: 0;
-                white-space: nowrap;
-            ">MARTANA</h2>
+            <img
+                src="{{ asset('images/logo-martana.png') }}"
+                alt="Logo Martana"
+                style="
+                    width: 48px;
+                    height: 48px;
+                    object-fit: contain;
+                    flex-shrink: 0;
+                    display: block;
+                    border-radius: 8px;
+                "
+            >
 
-            <p style="
-                color: #b8e8d1;
-                font-size: 12px;
-                font-weight: 600;
-                margin: 4px 0 0;
-                white-space: nowrap;
-            ">OWNER PANEL</p>
+            <div class="brand-text" style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-width: 0;
+            ">
+                <h2 style="
+                    color: #ffffff;
+                    font-size: 20px;
+                    font-weight: 800;
+                    letter-spacing: .5px;
+                    line-height: 1.2;
+                    margin: 0;
+                    white-space: nowrap;
+                ">MARTANA</h2>
+
+                <p style="
+                    color: #b8e8d1;
+                    font-size: 12px;
+                    font-weight: 600;
+                    margin: 4px 0 0;
+                    white-space: nowrap;
+                ">OWNER PANEL</p>
+            </div>
         </div>
-    </div>
 
         <nav class="menu">
+
+            <!-- DASHBOARD -->
             <a href="{{ route('owner.dashboard') }}" class="active">
-                <span class="menu-icon">⌂</span>
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                </span>
                 <span class="menu-label">Dashboard</span>
             </a>
 
+            <!-- LAPORAN PENDAPATAN -->
             <a href="{{ route('owner.reports.revenue') }}">
-                <span class="menu-icon">▤</span>
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 3v18h18"/>
+                        <path d="m7 14 4-4 4 3 6-7"/>
+                    </svg>
+                </span>
                 <span class="menu-label">Laporan Pendapatan</span>
             </a>
 
+            <!-- LAPORAN BOOKING -->
             <a href="{{ route('owner.reports.bookings') }}">
-                <span class="menu-icon">▦</span>
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="5" width="18" height="16" rx="2"/>
+                        <path d="M16 3v4M8 3v4M3 11h18"/>
+                        <path d="m9 16 2 2 4-4"/>
+                    </svg>
+                </span>
                 <span class="menu-label">Laporan Booking</span>
             </a>
 
+            <!-- LAPORAN PENJAGA -->
+            <a href="{{ route('owner.laporan-penjaga.index') }}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6M8 13h8M8 17h8"/>
+                    </svg>
+                </span>
+                <span class="menu-label">Laporan Penjaga</span>
+            </a>
+
+            <!-- KELOLA PENJAGA -->
             <a href="{{ route('owner.guards.index') }}">
-                <span class="menu-icon">♙</span>
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="10" cy="7" r="4"/>
+                        <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </span>
                 <span class="menu-label">Kelola Penjaga</span>
+            </a>
+
+            <!-- PRESENSI PENJAGA -->
+            <a href="{{ route('owner.attendances.index') }}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="4" y="3" width="16" height="18" rx="2"/>
+                        <path d="M9 3V2h6v1M8 11l2 2 5-5M8 17h8"/>
+                    </svg>
+                </span>
+                <span class="menu-label">Presensi Penjaga</span>
             </a>
 
         </nav>
 
         <div class="sidebar-bottom">
+
             <div class="owner-profile">
                 <div class="avatar">O</div>
                 <div>
@@ -548,9 +612,25 @@
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout">
-                    ↪ <span class="logout-label">Keluar dari akun</span>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="17"
+                        height="17"
+                        style="vertical-align:middle; margin-right:5px;"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                    </svg>
+                    <span class="logout-label">Keluar dari akun</span>
                 </button>
             </form>
+
         </div>
     </aside>
 
@@ -564,35 +644,56 @@
             </div>
 
             <div class="date-label">
-                ◷ {{ now()->translatedFormat('l, d F Y') }}
+                {{ now()->translatedFormat('l, d F Y') }}
             </div>
         </div>
 
         <!-- STATISTIK -->
         <section class="stats">
 
+            <!-- TOTAL BOOKING -->
             <div class="stat-card">
                 <div class="stat-top">
-                    <span class="stat-icon">▦</span>
+                    <span class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="5" width="18" height="16" rx="2"/>
+                            <path d="M16 3v4M8 3v4M3 11h18"/>
+                        </svg>
+                    </span>
                 </div>
+
                 <p>Total Booking</p>
                 <h2>{{ number_format($totalBookings, 0, ',', '.') }}</h2>
                 <small>Seluruh data booking</small>
             </div>
 
+            <!-- BOOKING HARI INI -->
             <div class="stat-card">
                 <div class="stat-top">
-                    <span class="stat-icon">◷</span>
+                    <span class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 7v5l3 2"/>
+                        </svg>
+                    </span>
                 </div>
+
                 <p>Booking Hari Ini</p>
                 <h2>{{ number_format($todayBookings, 0, ',', '.') }}</h2>
                 <small>Berdasarkan tanggal booking</small>
             </div>
 
+            <!-- TOTAL PENDAPATAN -->
             <div class="stat-card">
                 <div class="stat-top">
-                    <span class="stat-icon">Rp</span>
+                    <span class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 3v18h18"/>
+                            <path d="m7 14 4-4 4 3 6-7"/>
+                        </svg>
+                    </span>
                 </div>
+
                 <p>Total Pendapatan</p>
                 <h2 style="font-size:20px;">
                     Rp {{ number_format($totalRevenue, 0, ',', '.') }}
@@ -600,10 +701,18 @@
                 <small>Pembayaran yang telah diverifikasi</small>
             </div>
 
+            <!-- LAPANGAN AKTIF -->
             <div class="stat-card">
                 <div class="stat-top">
-                    <span class="stat-icon">▤</span>
+                    <span class="stat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M12 3v18M3 12h18"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </span>
                 </div>
+
                 <p>Lapangan Aktif</p>
                 <h2>{{ $activeCourts }} / {{ $totalCourts }}</h2>
                 <small>{{ $totalGuards }} penjaga terdaftar</small>
@@ -614,9 +723,11 @@
         <!-- GRAFIK DAN RINGKASAN -->
         <section class="content-grid">
 
+            <!-- GRAFIK PENDAPATAN -->
             <div class="panel">
                 <div class="panel-header">
                     <h3>Grafik Pendapatan</h3>
+
                     <span style="font-size:11px;color:#89968e;">
                         12 Bulan Terakhir
                     </span>
@@ -627,62 +738,100 @@
                 </div>
             </div>
 
+            <!-- RINGKASAN OPERASIONAL -->
             <div class="panel">
                 <div class="panel-header">
                     <h3>Ringkasan Operasional</h3>
                 </div>
 
+                <!-- TOTAL LAPANGAN -->
                 <div class="summary-item">
                     <div class="summary-left">
-                        <div class="summary-icon">▦</div>
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <path d="M12 3v18M3 12h18"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+
                         <div>
                             <strong>Total Lapangan</strong>
                             <small>Seluruh lapangan</small>
                         </div>
                     </div>
+
                     <span class="summary-number">{{ $totalCourts }}</span>
                 </div>
 
+                <!-- LAPANGAN AKTIF -->
                 <div class="summary-item">
                     <div class="summary-left">
-                        <div class="summary-icon">✓</div>
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="m8 12 3 3 5-6"/>
+                            </svg>
+                        </div>
+
                         <div>
                             <strong>Lapangan Aktif</strong>
                             <small>Siap digunakan</small>
                         </div>
                     </div>
+
                     <span class="summary-number">{{ $activeCourts }}</span>
                 </div>
 
+                <!-- JUMLAH PENJAGA -->
                 <div class="summary-item">
                     <div class="summary-left">
-                        <div class="summary-icon">♙</div>
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="10" cy="7" r="4"/>
+                                <path d="M20 21v-2a4 4 0 0 0-3-3.87"/>
+                            </svg>
+                        </div>
+
                         <div>
                             <strong>Jumlah Penjaga</strong>
                             <small>Petugas terdaftar</small>
                         </div>
                     </div>
+
                     <span class="summary-number">{{ $totalGuards }}</span>
                 </div>
 
+                <!-- BOOKING HARI INI -->
                 <div class="summary-item">
                     <div class="summary-left">
-                        <div class="summary-icon">◷</div>
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="M12 7v5l3 2"/>
+                            </svg>
+                        </div>
+
                         <div>
                             <strong>Booking Hari Ini</strong>
                             <small>Jadwal hari ini</small>
                         </div>
                     </div>
+
                     <span class="summary-number">{{ $todayBookings }}</span>
                 </div>
+
             </div>
 
         </section>
 
         <!-- BOOKING TERBARU -->
         <section class="table-panel">
+
             <div class="panel-header">
                 <h3>Booking Terbaru</h3>
+
                 <a href="{{ route('owner.reports.bookings') }}">
                     Lihat Semua →
                 </a>
@@ -704,13 +853,17 @@
                 <tbody>
                     @forelse ($recentBookings as $booking)
                         <tr>
-                            <td><strong>#{{ $booking->id }}</strong></td>
+                            <td>
+                                <strong>#{{ $booking->id }}</strong>
+                            </td>
 
                             <td>
                                 {{ $booking->customer_name ?: ($booking->user_name ?: '-') }}
                             </td>
 
-                            <td>{{ $booking->court_name ?: '-' }}</td>
+                            <td>
+                                {{ $booking->court_name ?: '-' }}
+                            </td>
 
                             <td>
                                 {{ \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') }}
@@ -736,6 +889,7 @@
                                 </span>
                             </td>
                         </tr>
+
                     @empty
                         <tr>
                             <td colspan="7" class="empty">
@@ -745,11 +899,13 @@
                     @endforelse
                 </tbody>
             </table>
+
         </section>
 
     </main>
 </div>
 
+<!-- CHART JS -->
 <script>
     const labels = @json($chartLabels);
     const values = @json($chartValues);
@@ -758,8 +914,10 @@
 
     new Chart(ctx, {
         type: 'line',
+
         data: {
             labels: labels,
+
             datasets: [{
                 label: 'Pendapatan',
                 data: values,
@@ -772,13 +930,16 @@
                 pointBackgroundColor: '#23845b'
             }]
         },
+
         options: {
             responsive: true,
             maintainAspectRatio: false,
+
             plugins: {
                 legend: {
                     display: false
                 },
+
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -788,19 +949,23 @@
                     }
                 }
             },
+
             scales: {
                 y: {
                     beginAtZero: true,
+
                     ticks: {
                         callback: function(value) {
                             return 'Rp ' + new Intl.NumberFormat('id-ID')
                                 .format(value);
                         }
                     },
+
                     grid: {
                         color: '#edf2ee'
                     }
                 },
+
                 x: {
                     grid: {
                         display: false

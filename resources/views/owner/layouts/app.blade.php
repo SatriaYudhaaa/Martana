@@ -35,8 +35,10 @@
             display: flex;
             flex-direction: column;
             z-index: 100;
+            overflow-y: auto;
         }
 
+        /* BRAND */
         .brand {
             display: flex;
             align-items: center;
@@ -46,14 +48,14 @@
         }
 
         .brand-logo {
-            width: 43px;
-            height: 43px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
             flex-shrink: 0;
         }
 
         .brand-info h2 {
-            font-size: 19px;
+            font-size: 25px;
             font-weight: 800;
             letter-spacing: .5px;
             white-space: nowrap;
@@ -61,12 +63,13 @@
 
         .brand-info p {
             color: #b8e8d1;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
             letter-spacing: 1px;
             margin-top: 4px;
         }
 
+        /* MENU */
         .menu-title {
             color: #a9c8ba;
             font-size: 11px;
@@ -84,31 +87,44 @@
         .menu a {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 11px 10px;
+            gap: 13px;
+            padding: 13px 12px;
             text-decoration: none;
             color: #d4e6dc;
-            border-radius: 9px;
+            border-radius: 10px;
             font-size: 13px;
             transition: .2s;
         }
 
         .menu a:hover,
         .menu a.active {
-            background: #187d60;
+            background: #23644d;
             color: white;
         }
 
+        /* ICON MENU */
         .menu-icon {
-            width: 31px;
-            height: 31px;
+            width: 36px;
+            height: 36px;
             display: grid;
             place-items: center;
-            border-radius: 8px;
-            background: rgba(220,248,234,.13);
+            border-radius: 9px;
+            background: rgba(220, 248, 234, .13);
             color: #d9f3e7;
-            font-size: 16px;
             flex-shrink: 0;
+            transition: .2s;
+        }
+
+        .menu-icon svg,
+        .stat-icon svg,
+        .summary-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .menu a.active .menu-icon {
@@ -116,6 +132,7 @@
             color: #145b43;
         }
 
+        /* SIDEBAR BOTTOM */
         .sidebar-bottom {
             margin-top: auto;
             border-top: 1px solid rgba(255,255,255,.15);
@@ -138,6 +155,7 @@
             display: grid;
             place-items: center;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .owner-profile strong {
@@ -160,6 +178,19 @@
             padding: 12px;
             cursor: pointer;
             font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .logout svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .logout:hover {
@@ -201,6 +232,19 @@
             font-size: 12px;
             color: #557064;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-label svg {
+            width: 17px;
+            height: 17px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         /* CARDS */
@@ -298,6 +342,7 @@
             border-color: #23845b;
         }
 
+        /* BUTTON */
         .btn {
             display: inline-flex;
             justify-content: center;
@@ -429,6 +474,7 @@
             border-color: #187d60;
         }
 
+        /* RESPONSIVE */
         @media(max-width: 1000px) {
             .stats {
                 grid-template-columns: repeat(2, 1fr);
@@ -462,6 +508,11 @@
             .menu a {
                 justify-content: center;
                 padding: 10px 5px;
+            }
+
+            .menu-icon {
+                width: 43px;
+                height: 43px;
             }
 
             .main {
@@ -498,7 +549,10 @@
 <body>
 <div class="dashboard">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
+
+        <!-- LOGO -->
         <div class="brand">
             <img
                 src="{{ asset('images/logo-martana.png') }}"
@@ -514,42 +568,109 @@
 
         <div class="menu-title">MENU UTAMA</div>
 
+        <!-- MENU NAVIGASI -->
         <nav class="menu">
+
+            <!-- DASHBOARD -->
             <a href="{{ route('owner.dashboard') }}"
                class="{{ ($activeMenu ?? '') === 'dashboard' ? 'active' : '' }}">
-                <span class="menu-icon">⌂</span>
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                </span>
+
                 <span class="menu-label">Dashboard</span>
             </a>
 
+            <!-- LAPORAN PENDAPATAN -->
             <a href="{{ route('owner.reports.revenue') }}"
                class="{{ ($activeMenu ?? '') === 'revenue' ? 'active' : '' }}">
-                <span class="menu-icon">▤</span>
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 3v18h18"/>
+                        <path d="m7 14 4-4 4 3 6-7"/>
+                    </svg>
+                </span>
+
                 <span class="menu-label">Laporan Pendapatan</span>
             </a>
 
+            <!-- LAPORAN BOOKING -->
             <a href="{{ route('owner.reports.bookings') }}"
                class="{{ ($activeMenu ?? '') === 'bookings' ? 'active' : '' }}">
-                <span class="menu-icon">▦</span>
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="5" width="18" height="16" rx="2"/>
+                        <path d="M16 3v4M8 3v4M3 11h18"/>
+                        <path d="m9 16 2 2 4-4"/>
+                    </svg>
+                </span>
+
                 <span class="menu-label">Laporan Booking</span>
             </a>
 
+            <!-- LAPORAN PENJAGA -->
+            <a href="{{ route('owner.laporan-penjaga.index') }}"
+               class="{{ ($activeMenu ?? '') === 'laporan-penjaga' ? 'active' : '' }}">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M8 13h8M8 17h8"/>
+                    </svg>
+                </span>
+
+                <span class="menu-label">Laporan Penjaga</span>
+            </a>
+
+            <!-- KELOLA PENJAGA -->
             <a href="{{ route('owner.guards.index') }}"
                class="{{ ($activeMenu ?? '') === 'guards' ? 'active' : '' }}">
-                <span class="menu-icon">♟</span>
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="10" cy="7" r="4"/>
+                        <path d="M20 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </span>
+
                 <span class="menu-label">Kelola Penjaga</span>
             </a>
 
+            <!-- PRESENSI PENJAGA -->
             <a href="{{ route('owner.attendances.index') }}"
-                class="{{ ($activeMenu ?? '') === 'attendances' ? 'active' : '' }}">
-                    <span class="menu-icon">✓</span>
-                    <span class="menu-label">Presensi Penjaga</span>
+               class="{{ ($activeMenu ?? '') === 'attendances' ? 'active' : '' }}">
+
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="4" y="3" width="16" height="18" rx="2"/>
+                        <path d="M9 3V2h6v1"/>
+                        <path d="m8 11 2 2 5-5"/>
+                        <path d="M8 17h8"/>
+                    </svg>
+                </span>
+
+                <span class="menu-label">Presensi Penjaga</span>
             </a>
 
         </nav>
 
+        <!-- PROFIL DAN LOGOUT -->
         <div class="sidebar-bottom">
+
             <div class="owner-profile">
                 <div class="avatar">O</div>
+
                 <div>
                     <strong>Owner Martana</strong>
                     <small>Administrator</small>
@@ -558,29 +679,48 @@
 
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
+
                 <button type="submit" class="logout">
-                    ↪ <span class="logout-label">Keluar dari akun</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                    </svg>
+
+                    <span class="logout-label">Keluar dari akun</span>
                 </button>
             </form>
+
         </div>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main">
+
         <div class="topbar">
+
             <div>
                 <h1>@yield('page-title')</h1>
                 <p>@yield('page-description')</p>
             </div>
 
             <div class="date-label">
-                ◷ {{ now()->translatedFormat('l, d F Y') }}
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 7v5l3 2"/>
+                </svg>
+
+                {{ now()->translatedFormat('l, d F Y') }}
             </div>
+
         </div>
 
         @yield('content')
+
     </main>
 </div>
 
 @stack('scripts')
+
 </body>
 </html>

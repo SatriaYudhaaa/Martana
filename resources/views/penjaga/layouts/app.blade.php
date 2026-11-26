@@ -340,6 +340,7 @@
 
         {{-- BRAND --}}
         <div class="brand">
+
             <div class="brand-logo">
                 <img src="{{ asset('images/martana-logo.png') }}" alt="Logo Martana">
             </div>
@@ -348,6 +349,7 @@
                 <div class="brand-name">MARTANA</div>
                 <div class="brand-subtitle">FUTSAL</div>
             </div>
+
         </div>
 
         <div class="menu-label">MENU UTAMA</div>
@@ -358,49 +360,76 @@
             {{-- DASHBOARD --}}
             <a href="{{ route('penjaga.dashboard') }}"
                class="menu-item {{ request()->routeIs('penjaga.dashboard') ? 'active' : '' }}">
+
                 <i class="bi bi-grid-1x2"></i>
                 <span>Dashboard</span>
+
             </a>
+
 
             {{-- PRESENSI --}}
             <a href="{{ route('penjaga.presensi') }}"
                class="menu-item {{ request()->routeIs('penjaga.presensi*') ? 'active' : '' }}">
+
                 <i class="bi bi-calendar-plus"></i>
                 <span>Presensi</span>
+
             </a>
+
 
             {{-- BOOKING --}}
             <a href="{{ route('penjaga.booking') }}"
                class="menu-item {{ request()->routeIs('penjaga.booking*') ? 'active' : '' }}">
+
                 <i class="bi bi-calendar-event"></i>
                 <span>Booking</span>
+
             </a>
+
+
+            {{-- KELOLA LAPANGAN --}}
+            <a href="{{ route('penjaga.lapangan.index') }}"
+               class="menu-item {{ request()->routeIs('penjaga.lapangan*') ? 'active' : '' }}">
+
+                <i class="bi bi-dribbble"></i>
+                <span>Kelola Lapangan</span>
+
+            </a>
+
 
             {{-- TRANSAKSI --}}
             <a href="{{ route('penjaga.transaksi') }}"
                class="menu-item {{ request()->routeIs('penjaga.transaksi*') ? 'active' : '' }}">
+
                 <i class="bi bi-wallet2"></i>
                 <span>Transaksi</span>
+
             </a>
+
 
             {{-- KELOLA AKUN --}}
             <a href="{{ route('penjaga.kelola-akun') }}"
                class="menu-item {{ request()->routeIs('penjaga.kelola-akun*') ? 'active' : '' }}">
+
                 <i class="bi bi-people"></i>
                 <span>Kelola Akun</span>
+
             </a>
 
         </nav>
+
 
         {{-- PROFILE DAN LOGOUT --}}
         <div class="sidebar-bottom">
 
             <div class="profile">
+
                 <div class="profile-icon">
                     <i class="bi bi-person-fill"></i>
                 </div>
 
                 <div class="profile-text">
+
                     <div class="profile-name">
                         {{ $penjaga->name ?? 'Penjaga' }}
                     </div>
@@ -408,22 +437,30 @@
                     <div class="profile-email">
                         {{ $penjaga->email ?? 'petugas@martana.id' }}
                     </div>
+
                 </div>
+
             </div>
+
 
             {{-- LOGOUT ADMIN --}}
             <form action="{{ route('admin.logout') }}" method="POST">
+
                 @csrf
 
                 <button type="submit" class="logout-button">
+
                     <i class="bi bi-box-arrow-left"></i>
                     <span class="logout-text">Logout</span>
+
                 </button>
+
             </form>
 
         </div>
 
     </aside>
+
 
     {{-- KONTEN UTAMA --}}
     <main class="main">
@@ -432,29 +469,43 @@
         <header class="topbar">
 
             <div>
-                <div class="topbar-title">Panel Penjaga</div>
+
+                <div class="topbar-title">
+                    Panel Penjaga
+                </div>
 
                 <div class="topbar-subtitle">
                     Sistem Informasi Pengelolaan Lapangan Futsal Martana
                 </div>
+
             </div>
 
             <div class="topbar-date">
+
                 <i class="bi bi-calendar3"></i>
-                <span>{{ now()->translatedFormat('l, d F Y') }}</span>
+
+                <span>
+                    {{ now()->translatedFormat('l, d F Y') }}
+                </span>
+
             </div>
 
         </header>
+
 
         {{-- CONTENT --}}
         <section class="content">
 
             <div class="page-heading">
-                <h1>@yield('page-title', 'Dashboard Penjaga')</h1>
+
+                <h1>
+                    @yield('page-title', 'Dashboard Penjaga')
+                </h1>
 
                 <p>
                     @yield('page-description', 'Kelola operasional lapangan Martana Futsal.')
                 </p>
+
             </div>
 
             @yield('content')
@@ -462,6 +513,7 @@
         </section>
 
     </main>
+
 
     @stack('scripts')
 
